@@ -14,13 +14,14 @@ Backend desenvolvido para o Tech Challenge da Fase 3 com foco em:
 
 O projeto segue uma abordagem de microserviços organizados em um único repositório (monorepo) para facilitar execução e avaliação.
 
+```
 hospital-system
  ├── agendamento-service
  ├── notificacao-service
  ├── docker-compose.yml (opcional)
  ├── README.md
  └── LICENSE.md
-
+```
 ---
 
 ## 🔹 Serviços
@@ -118,7 +119,8 @@ password: guest
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Autores 
 
 Felipe Tiburcio de Araujo
+
 Rodrigo de Alencar Xavier
