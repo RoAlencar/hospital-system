@@ -1,6 +1,23 @@
 spring:
   application:
     name: agendamento-service
+  
+  # Configurações do Banco de Dados
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hospital_system
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    
+  # Configurações JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        "[format_sql]": true
+    show-sql: true
 
   # Configurações do RabbitMQ
   rabbitmq:
@@ -8,3 +25,7 @@ spring:
       port: 5672
       username: guest
       password: guest
+
+# Configurações do servidor
+server:
+  port: 8080
