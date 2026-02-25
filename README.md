@@ -6,13 +6,13 @@ Backend desenvolvido para o Tech Challenge da Fase 3 com foco em:
 - 🔐 Segurança com Spring Security
 - 📊 Consultas flexíveis com GraphQL
 - 🔁 Comunicação assíncrona com RabbitMQ
-- 🧩 Arquitetura baseada em microserviços
+- 🧩 Arquitetura baseada em microsserviços
 
 ---
 
 ## 📐 Arquitetura
 
-O projeto segue uma abordagem de microserviços organizados em um único repositório (monorepo) para facilitar execução e avaliação.
+O projeto segue uma abordagem de microsserviços organizados em um único repositório (monorepo) para facilitar execução e avaliação.
 
 ```
 hospital-system
