@@ -1,0 +1,2417 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-02-23T19:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_group_bootstrap",
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "🚀 Bootstrap & Sample Data",
+      "description": "Scripts para inicialização do sistema e criação de dados de teste",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714900000
+    },
+    {
+      "_id": "req_group_auth",
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "🔐 Authentication",
+      "description": "Endpoints para autenticação e registro de usuários - Use estes para testar login com diferentes perfis",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714800000
+    },
+    {
+      "_id": "req_group_consultas",
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "🏥 Consultas",
+      "description": "Endpoints para gerenciamento de consultas médicas",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714700000
+    },
+    {
+      "_id": "req_group_medicos",
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "🩺 Médicos",
+      "description": "Endpoints para gerenciamento de médicos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714650000
+    },
+    {
+      "_id": "req_group_enfermeiros",
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "👩‍⚕️ Enfermeiros",
+      "description": "Endpoints para gerenciamento de enfermeiros",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714600000
+    },
+    {
+      "_id": "req_group_pacientes",
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "🧑‍🤝‍🧑 Pacientes",
+      "description": "Endpoints para gerenciamento de pacientes",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714550000
+    },
+    {
+      "_id": "req_group_users", 
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "👤 Usuários",
+      "description": "Endpoints para gerenciamento de usuários do sistema",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714500000
+    },
+    {
+      "_id": "req_group_graphql",
+      "_type": "request_group",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "📊 GraphQL",
+      "description": "Endpoints GraphQL para consultas flexíveis",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1708714400000
+    },
+    {
+      "_id": "wrk_hospital",
+      "_type": "workspace",
+      "parentId": null,
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "🏥 Hospital System API",
+      "description": "Coleção completa para testar todos os endpoints do Sistema Hospitalar\n\n🚀 GUIA DE INÍCIO RÁPIDO:\n\n1. 📋 BOOTSTRAP DO SISTEMA (PRIMEIRA VEZ)\n   • Execute a aplicação (ela criará as tabelas automaticamente)\n   • Use o endpoint 'Bootstrap - Criar Admin' para criar o primeiro usuário administrativo\n\n2. 🔐 FLUXO DE AUTENTICAÇÃO\n   • Teste login com diferentes perfis na seção Authentication\n   • Use as credenciais pré-configuradas nas variáveis de ambiente\n\n3. 👥 CRIAÇÃO DE USUÁRIOS (IMPORTANTE: 2 ETAPAS PARA PROFISSIONAIS)\n   • Registre pacientes via POST /auth/register (público)\n   • Crie médicos/enfermeiros via POST /api/users (requer autenticação)\n   • Para profissionais: PRIMEIRO crie o usuário (steps 2-3), DEPOIS o perfil profissional (steps 5-7)\n\n4. 🏥 DADOS DE TESTE\n   • Siga a ordem: Users → Perfis Profissionais → Consultas\n   • Use as requests da seção 'Bootstrap & Sample Data'\n   • ATENÇÃO: Steps 2-4 criam USERS, Steps 5-7 criam PERFIS PROFISSIONAIS\n\n5. ✅ VALIDAÇÃO\n   • Teste endpoints com diferentes perfis de usuário\n   • Verifique permissões e acessos por role\n\n📋 SEÇÕES DISPONÍVEIS:\n🚀 Bootstrap & Sample Data - Scripts de inicialização\n🔐 Authentication - Login e registro\n🏥 Consultas - Gerenciamento de consultas médicas\n🩺 Médicos - CRUD completo de médicos\n👩‍⚕️ Enfermeiros - CRUD completo de enfermeiros\n🧑‍🤝‍🧑 Pacientes - CRUD completo de pacientes\n👤 Usuários - Gerenciamento de usuários do sistema\n📊 GraphQL - Consultas flexíveis"
+    },
+    {
+      "_id": "env_hospital",
+      "_type": "environment",
+      "parentId": "wrk_hospital",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "name": "Hospital Environment",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "medico_username": "dr.silva",
+        "medico_password": "123456",
+        "enfermeiro_username": "enf.maria",
+        "enfermeiro_password": "123456",
+        "paciente_username": "joao.silva",
+        "paciente_password": "123456"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "medico_username", "medico_password", "enfermeiro_username", "enfermeiro_password", "paciente_username", "paciente_password"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1708714800000
+    },
+
+    {
+      "_id": "req_bootstrap_admin",
+      "_type": "request",
+      "parentId": "req_group_bootstrap",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/bootstrap-admin",
+      "name": "1. Bootstrap - Criar Admin",
+      "description": "🚑 PRIMEIRO PASSO: Crie o primeiro usuário admin\n\n✅ Este endpoint funciona apenas quando não existem usuários no banco!\n\n📝 COMO USAR:\n1. Execute a aplicação (ela criará as tabelas automaticamente)\n2. Execute este request (não precisa de autenticação)\n3. O usuário será criado automaticamente como ROLE_MEDICO\n4. Após criar, use este admin para criar outros usuários",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"nome\": \"Administrator\",\n  \"email\": \"admin@hospital.com\",\n  \"telefone\": \"(11) 99999-0000\",\n  \"role\": \"ROLE_MEDICO\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714900000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_bootstrap_medico",
+      "_type": "request",
+      "parentId": "req_group_bootstrap",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users",
+      "name": "2. Criar Dr. Silva (Médico)",
+      "description": "Cria o médico pré-configurado nas variáveis de ambiente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.medico_username }}\",\n  \"password\": \"{{ _.medico_password }}\",\n  \"nome\": \"Dr. Silva Santos\",\n  \"email\": \"dr.silva@hospital.com\",\n  \"telefone\": \"(11) 99999-1111\",\n  \"role\": \"ROLE_MEDICO\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "admin",
+        "password": "admin123"
+      },
+      "metaSortKey": -1708714890000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_bootstrap_enfermeiro_user",
+      "_type": "request",
+      "parentId": "req_group_bootstrap",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users",
+      "name": "3. Criar Usuário da Enf. Maria",
+      "description": "Cria apenas o USUÁRIO base com role ENFERMEIRO (não cria ainda o perfil profissional)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.enfermeiro_username }}\",\n  \"password\": \"{{ _.enfermeiro_password }}\",\n  \"nome\": \"Enfermeira Maria Silva\",\n  \"email\": \"maria@hospital.com\",\n  \"telefone\": \"(11) 99999-2222\",\n  \"role\": \"ROLE_ENFERMEIRO\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "admin",
+        "password": "admin123"
+      },
+      "metaSortKey": -1708714880000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_bootstrap_paciente",
+      "_type": "request",
+      "parentId": "req_group_bootstrap",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/register",
+      "name": "4. Registrar João Silva (Paciente)",
+      "description": "Registra o paciente pré-configurado via endpoint público",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.paciente_username }}\",\n  \"password\": \"{{ _.paciente_password }}\",\n  \"nome\": \"João Silva Oliveira\",\n  \"email\": \"joao@email.com\",\n  \"telefone\": \"(11) 99999-3333\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714870000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_bootstrap_enfermeiro_profile",
+      "_type": "request",
+      "parentId": "req_group_bootstrap",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros",
+      "name": "5. Criar Perfil Profissional da Enfermeira",
+      "description": "Cria o registro na tabela ENFERMEIROS com dados profissionais (COREN, setor, etc.) referenciando o usuário do step 3",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": 3,\n  \"coren\": \"123456-SP\",\n  \"setor\": \"Emergência\",\n  \"turno\": \"Manhã\",\n  \"especializacao\": \"UTI\",\n  \"descricao\": \"Enfermeira especializada em cuidados intensivos - ATENÇÃO: userId deve corresponder ao ID retornado no step 3\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "admin",
+        "password": "admin123"
+      },
+      "metaSortKey": -1708714860000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_bootstrap_medico_profile",
+      "_type": "request",
+      "parentId": "req_group_bootstrap",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos",
+      "name": "6. Criar Perfil Profissional do Dr. Silva",
+      "description": "Cria o registro na tabela MEDICOS com dados profissionais (CRM, especialidade, etc.) referenciando o usuário do step 2",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": 2,\n  \"crm\": \"123456-SP\",\n  \"especialidade\": \"CARDIOLOGIA\",\n  \"descricao\": \"Cardiologista com mais de 10 anos de experiência - ATENÇÃO: userId deve corresponder ao ID retornado no step 2\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "admin",
+        "password": "admin123"
+      },
+      "metaSortKey": -1708714850000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_bootstrap_paciente_profile",
+      "_type": "request",
+      "parentId": "req_group_bootstrap",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes",
+      "name": "7. Criar Perfil do Paciente João",
+      "description": "Cria o registro na tabela PACIENTES com dados pessoais (CPF, data nascimento, etc.) referenciando o usuário do step 4",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": 4,\n  \"cpf\": \"12345678901\",\n  \"dataNascimento\": \"1990-05-15\",\n  \"endereco\": \"Rua das Flores, 123\",\n  \"numeroCartaoSus\": \"123456789012345\",\n  \"convenioMedico\": \"Unimed\",\n  \"contatoEmergencia\": \"(11) 99999-4444\",\n  \"observacoesMedicas\": \"Paciente com histórico de hipertensão - ATENÇÃO: userId deve corresponder ao ID retornado no step 4\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "admin",
+        "password": "admin123"
+      },
+      "metaSortKey": -1708714840000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+
+    {
+      "_id": "req_login_admin",
+      "_type": "request",
+      "parentId": "req_group_auth",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login - Admin",
+      "description": "Login como administrador do sistema",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714820000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_login_medico",
+      "_type": "request",
+      "parentId": "req_group_auth",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login - Médico (Dr. Silva)",
+      "description": "Login como médico usando credenciais pré-configuradas",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.medico_username }}\",\n  \"password\": \"{{ _.medico_password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714810000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_login_enfermeiro",
+      "_type": "request",
+      "parentId": "req_group_auth",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login - Enfermeiro (Enf. Maria)",
+      "description": "Login como enfermeiro usando credenciais pré-configuradas",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.enfermeiro_username }}\",\n  \"password\": \"{{ _.enfermeiro_password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714805000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_login_paciente",
+      "_type": "request",
+      "parentId": "req_group_auth",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login - Paciente (João Silva)",
+      "description": "Login como paciente usando credenciais pré-configuradas",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.paciente_username }}\",\n  \"password\": \"{{ _.paciente_password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714802000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_auth_login_generic",
+      "_type": "request",
+      "parentId": "req_group_auth",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Login - Genérico (Personalizável)",
+      "description": "Login genérico - altere as credenciais conforme necessário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.medico_username }}\",\n  \"password\": \"{{ _.medico_password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714801000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_auth_register",
+      "_type": "request",
+      "parentId": "req_group_auth",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/register",
+      "name": "Registrar Paciente",
+      "description": "Registra novo paciente no sistema",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"novo.paciente\",\n  \"password\": \"123456\",\n  \"nome\": \"Novo Paciente Silva\",\n  \"email\": \"novo.paciente@email.com\",\n  \"telefone\": \"(11) 98765-4321\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type", 
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1708714750000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_auth_me",
+      "_type": "request",
+      "parentId": "req_group_auth",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/auth/me",
+      "name": "Informações do Usuário",
+      "description": "Retorna informações do usuário autenticado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714700000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+
+    {
+      "_id": "req_consultas_create",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas",
+      "name": "Criar Consulta",
+      "description": "Cria nova consulta médica (MEDICO ou ENFERMEIRO)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"medicoId\": 1,\n  \"pacienteId\": 1,\n  \"enfermeiroId\": 1,\n  \"dataHora\": \"2026-02-25T14:30:00\",\n  \"motivo\": \"Consulta de rotina\",\n  \"observacoes\": \"Paciente relatando dores nas costas\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714650000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_by_id",
+      "_type": "request",
+      "parentId": "req_group_consultas", 
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/1",
+      "name": "Buscar Consulta por ID",
+      "description": "Busca consulta específica pelo ID (todos os roles)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714640000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_all",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas",
+      "name": "Listar Todas Consultas",
+      "description": "Lista todas as consultas (MEDICO ou ENFERMEIRO)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714630000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_by_medico",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/medico/1",
+      "name": "Consultas por Médico",
+      "description": "Lista consultas de um médico específico (MEDICO ou ENFERMEIRO)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714620000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_by_paciente",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/paciente/1",
+      "name": "Consultas por Paciente",
+      "description": "Lista consultas de um paciente (MEDICO, ENFERMEIRO ou próprio PACIENTE)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.paciente_username }}",
+        "password": "{{ _.paciente_password }}"
+      },
+      "metaSortKey": -1708714610000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_futuras_paciente",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/paciente/1/futuras",
+      "name": "Consultas Futuras do Paciente",
+      "description": "Lista consultas futuras de um paciente",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714600000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_historico_paciente",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/paciente/1/historico",
+      "name": "Histórico Completo do Paciente",
+      "description": "Histórico completo de consultas do paciente",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714590000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_by_status",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/status/AGENDADA",
+      "name": "Consultas por Status",
+      "description": "Lista consultas por status (AGENDADA, CONFIRMADA, EM_ANDAMENTO, CONCLUIDA, CANCELADA, REAGENDADA, FALTA_PACIENTE)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714580000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_by_periodo",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/periodo",
+      "name": "Consultas por Período",
+      "description": "Lista consultas em um período específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "inicio",
+          "value": "2026-02-01T00:00:00"
+        },
+        {
+          "name": "fim",
+          "value": "2026-02-28T23:59:59"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714570000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_notificacoes",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/notificacoes",
+      "name": "Consultas para Notificação",
+      "description": "Lista consultas que precisam de notificação",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714560000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_update",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/1",
+      "name": "Atualizar Consulta",
+      "description": "Atualiza consulta completa (MEDICO ou ENFERMEIRO)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"medicoId\": 1,\n  \"pacienteId\": 1,\n  \"enfermeiroId\": 1,\n  \"dataHora\": \"2026-02-25T15:00:00\",\n  \"status\": \"CONFIRMADA\",\n  \"motivo\": \"Consulta de rotina - atualizada\",\n  \"observacoes\": \"Paciente confirmou presença\",\n  \"diagnostico\": \"Diagnóstico preliminar\",\n  \"prescricao\": \"Repouso e medicação\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714550000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_update_status",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/1/status",
+      "name": "Atualizar Status da Consulta",
+      "description": "Atualiza apenas o status da consulta",
+      "method": "PUT",
+      "body": {},
+      "parameters": [
+        {
+          "name": "status",
+          "value": "EM_ANDAMENTO"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714540000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_cancelar",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/1/cancelar",
+      "name": "Cancelar Consulta",
+      "description": "Cancela consulta com motivo",
+      "method": "PUT",
+      "body": {},
+      "parameters": [
+        {
+          "name": "motivo",
+          "value": "Paciente solicitou cancelamento"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714530000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_consultas_delete",
+      "_type": "request",
+      "parentId": "req_group_consultas",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/consultas/1",
+      "name": "Excluir Consulta",
+      "description": "Remove consulta do sistema (MEDICO ou ENFERMEIRO)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714520000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+
+    {
+      "_id": "req_medicos_create",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos",
+      "name": "Criar Médico",
+      "description": "Cadastra novo médico (MEDICO ou ENFERMEIRO)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": 2,\n  \"crm\": \"654321-SP\",\n  \"especialidade\": \"NEUROLOGIA\",\n  \"descricao\": \"Neurologista especializado em neurologia clínica\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714515000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_by_id",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/1",
+      "name": "Buscar Médico por ID",
+      "description": "Busca médico específico pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714514000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_by_crm",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/crm/123456-SP",
+      "name": "Buscar Médico por CRM",
+      "description": "Busca médico pelo número do CRM",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714513000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_by_user_id",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/user/2",
+      "name": "Buscar Médico por User ID",
+      "description": "Busca médico pelo ID do usuário",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714512000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_all",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos",
+      "name": "Listar Todos Médicos",
+      "description": "Lista todos os médicos cadastrados",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714511000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_by_especialidade",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/especialidade/CARDIOLOGIA",
+      "name": "Médicos por Especialidade",
+      "description": "Lista médicos por especialidade (CARDIOLOGIA, NEUROLOGIA, PEDIATRIA, etc.)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_active",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/active",
+      "name": "Médicos Ativos",
+      "description": "Lista apenas médicos ativos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_search",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/search",
+      "name": "Buscar Médicos por Nome",
+      "description": "Busca médicos pelo nome",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "nome",
+          "value": "Silva"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_update",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/1",
+      "name": "Atualizar Médico",
+      "description": "Atualiza dados do médico",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"crm\": \"123456-SP\",\n  \"especialidade\": \"CARDIOLOGIA\",\n  \"descricao\": \"Cardiologista com especialização em cirurgia cardiovascular\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_deactivate",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/1/deactivate",
+      "name": "Desativar Médico",
+      "description": "Desativa médico (torna inativo)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_activate",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/1/activate",
+      "name": "Ativar Médico",
+      "description": "Ativa médico (torna ativo novamente)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510050,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_medicos_delete",
+      "_type": "request",
+      "parentId": "req_group_medicos",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/medicos/1",
+      "name": "Excluir Médico",
+      "description": "Remove médico do sistema (apenas MEDICO)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+
+    {
+      "_id": "req_enfermeiros_create",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros",
+      "name": "Criar Enfermeiro",
+      "description": "Cadastra novo enfermeiro (MEDICO ou ENFERMEIRO)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": 2,\n  \"coren\": \"123456-SP\",\n  \"setor\": \"Emergência\",\n  \"turno\": \"Manhã\",\n  \"especializacao\": \"UTI\",\n  \"descricao\": \"Enfermeiro especializado em cuidados intensivos\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714510000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_by_id",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/1",
+      "name": "Buscar Enfermeiro por ID",
+      "description": "Busca enfermeiro específico pelo ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_by_coren",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/coren/123456-SP",
+      "name": "Buscar Enfermeiro por COREN",
+      "description": "Busca enfermeiro pelo número do COREN",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714490000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_by_user_id",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/user/2",
+      "name": "Buscar Enfermeiro por User ID",
+      "description": "Busca enfermeiro pelo ID do usuário",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714480000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_all",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros",
+      "name": "Listar Todos Enfermeiros",
+      "description": "Lista todos os enfermeiros cadastrados",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714470000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_by_setor",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/setor/Emergência",
+      "name": "Enfermeiros por Setor",
+      "description": "Lista enfermeiros de um setor específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714460000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_by_turno",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/turno/Manhã",
+      "name": "Enfermeiros por Turno",
+      "description": "Lista enfermeiros de um turno específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714450000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_by_setor_turno",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/setor/Emergência/turno/Manhã",
+      "name": "Enfermeiros por Setor e Turno",
+      "description": "Lista enfermeiros por setor e turno específicos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714440000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_by_especializacao",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/especializacao/UTI",
+      "name": "Enfermeiros por Especialização",
+      "description": "Lista enfermeiros por especialização",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714430000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_active",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/active",
+      "name": "Enfermeiros Ativos",
+      "description": "Lista apenas enfermeiros ativos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714420000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_search",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/search",
+      "name": "Buscar Enfermeiros por Nome",
+      "description": "Busca enfermeiros pelo nome",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "nome",
+          "value": "Maria"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714410000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_update",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/1",
+      "name": "Atualizar Enfermeiro",
+      "description": "Atualiza dados do enfermeiro",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": 2,\n  \"coren\": \"123456-SP\",\n  \"setor\": \"UTI\",\n  \"turno\": \"Tarde\",\n  \"especializacao\": \"Cardiologia\",\n  \"descricao\": \"Enfermeiro especializado em cardiologia e UTI\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714400000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_deactivate",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/1/deactivate",
+      "name": "Desativar Enfermeiro",
+      "description": "Desativa enfermeiro (torna inativo)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714390000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_activate",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/1/activate",
+      "name": "Ativar Enfermeiro",
+      "description": "Ativa enfermeiro (torna ativo novamente)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714380000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_enfermeiros_delete",
+      "_type": "request",
+      "parentId": "req_group_enfermeiros",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/enfermeiros/1",
+      "name": "Excluir Enfermeiro",
+      "description": "Remove enfermeiro do sistema (apenas MEDICO)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714370000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+
+    {
+      "_id": "req_pacientes_create",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes",
+      "name": "Criar Paciente",
+      "description": "Cadastra novo paciente (MEDICO ou ENFERMEIRO)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"userId\": 4,\n  \"cpf\": \"98765432100\",\n  \"dataNascimento\": \"1985-03-20\",\n  \"endereco\": \"Avenida Paulista, 1000\",\n  \"numeroCartaoSus\": \"987654321098765\",\n  \"convenioMedico\": \"Bradesco Saúde\",\n  \"contatoEmergencia\": \"(11) 99999-5555\",\n  \"observacoesMedicas\": \"Paciente diabético\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714365000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_by_id",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/1",
+      "name": "Buscar Paciente por ID",
+      "description": "Busca paciente específico pelo ID (MEDICO, ENFERMEIRO ou próprio PACIENTE)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.paciente_username }}",
+        "password": "{{ _.paciente_password }}"
+      },
+      "metaSortKey": -1708714364000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_by_cpf",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/cpf/12345678901",
+      "name": "Buscar Paciente por CPF",
+      "description": "Busca paciente pelo CPF (MEDICO ou ENFERMEIRO)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714363000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_by_user_id", 
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/user/4",
+      "name": "Buscar Paciente por User ID",
+      "description": "Busca paciente pelo ID do usuário",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714362000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_all",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes",
+      "name": "Listar Todos Pacientes",
+      "description": "Lista todos os pacientes cadastrados (MEDICO ou ENFERMEIRO)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714361000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_active",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/active",
+      "name": "Pacientes Ativos",
+      "description": "Lista apenas pacientes ativos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714360500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_search",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/search",
+      "name": "Buscar Pacientes por Nome",
+      "description": "Busca pacientes pelo nome",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "nome",
+          "value": "João"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714360400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_update",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/1",
+      "name": "Atualizar Paciente",
+      "description": "Atualiza dados do paciente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"cpf\": \"12345678901\",\n  \"dataNascimento\": \"1990-05-15\",\n  \"endereco\": \"Rua das Flores, 456 - Novo endereço\",\n  \"numeroCartaoSus\": \"123456789012345\",\n  \"convenioMedico\": \"Amil\",\n  \"contatoEmergencia\": \"(11) 88888-9999\",\n  \"observacoesMedicas\": \"Paciente com histórico de hipertensão - atualizado\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714360300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_deactivate",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/1/deactivate",
+      "name": "Desativar Paciente",
+      "description": "Desativa paciente (torna inativo)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714360200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_activate",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/1/activate",
+      "name": "Ativar Paciente",
+      "description": "Ativa paciente (torna ativo novamente)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714360100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pacientes_delete",
+      "_type": "request",
+      "parentId": "req_group_pacientes",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/pacientes/1",
+      "name": "Excluir Paciente",
+      "description": "Remove paciente do sistema (apenas MEDICO)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714360000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+
+    {
+      "_id": "req_users_create",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users",
+      "name": "Criar Usuário",
+      "description": "Cria novo usuário no sistema (MEDICO ou ENFERMEIRO)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"novo.medico\",\n  \"password\": \"123456\",\n  \"nome\": \"Dr. João Santos\",\n  \"email\": \"joao.santos@hospital.com\",\n  \"telefone\": \"(11) 99999-9999\",\n  \"role\": \"ROLE_MEDICO\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714360000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_by_id",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/1",
+      "name": "Buscar Usuário por ID",
+      "description": "Busca usuário específico pelo ID (próprio paciente pode ver seus dados)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714350000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_by_username",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/username/dr.silva",
+      "name": "Buscar Usuário por Username",
+      "description": "Busca usuário pelo nome de usuário",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714340000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_all",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users",
+      "name": "Listar Todos Usuários",
+      "description": "Lista todos os usuários do sistema",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714330000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_by_role",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/role/ROLE_MEDICO",
+      "name": "Usuários por Role",
+      "description": "Lista usuários por função (ROLE_MEDICO, ROLE_ENFERMEIRO, ROLE_PACIENTE)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714320000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_active",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/active",
+      "name": "Usuários Ativos",
+      "description": "Lista apenas usuários ativos",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714310000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_update",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/1",
+      "name": "Atualizar Usuário",
+      "description": "Atualiza dados do usuário (próprio paciente pode atualizar seus dados)",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"dr.silva.updated\",\n  \"nome\": \"Dr. Silva Santos - Atualizado\",\n  \"email\": \"silva.updated@hospital.com\",\n  \"telefone\": \"(11) 88888-8888\",\n  \"role\": \"ROLE_MEDICO\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714300000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_deactivate",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/1/deactivate",
+      "name": "Desativar Usuário",
+      "description": "Desativa usuário (torna inativo)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714290000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_activate",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/1/activate",
+      "name": "Ativar Usuário",
+      "description": "Ativa usuário (torna ativo novamente)",
+      "method": "PUT",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714280000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_users_delete",
+      "_type": "request",
+      "parentId": "req_group_users",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/api/users/1",
+      "name": "Excluir Usuário",
+      "description": "Remove usuário do sistema (apenas MEDICO)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714270000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+
+    {
+      "_id": "req_graphql",
+      "_type": "request",
+      "parentId": "req_group_graphql",
+      "modified": 1708714800000,
+      "created": 1708714800000,
+      "url": "{{ _.base_url }}/graphql",
+      "name": "GraphQL - Consultas Flexíveis",
+      "description": "Endpoint GraphQL para consultas personalizadas",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"query\": \"query GetConsultas { consultas { id dataHora status motivo medico { user { nome } } paciente { user { nome } } } }\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "basic",
+        "username": "{{ _.medico_username }}",
+        "password": "{{ _.medico_password }}"
+      },
+      "metaSortKey": -1708714260000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    }
+  ]
+}
