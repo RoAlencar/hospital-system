@@ -1,30 +1,37 @@
 package br.com.fiap.app.agendamentoService.service;
 
-import br.com.fiap.app.agendamentoService.entity.Consulta;
-import br.com.fiap.app.agendamentoService.entity.Medico;
-import br.com.fiap.app.agendamentoService.entity.Paciente;
-import br.com.fiap.app.agendamentoService.enums.StatusConsulta;
-import br.com.fiap.app.agendamentoService.exception.BusinessException;
-import br.com.fiap.app.agendamentoService.exception.ResourceNotFoundException;
-import br.com.fiap.app.agendamentoService.repository.ConsultaRepository;
-import br.com.fiap.app.agendamentoService.repository.MedicoRepository;
-import br.com.fiap.app.agendamentoService.repository.PacienteRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
+import br.com.fiap.app.agendamentoService.entity.Consulta;
+import br.com.fiap.app.agendamentoService.entity.Medico;
+import br.com.fiap.app.agendamentoService.entity.Paciente;
+import br.com.fiap.app.agendamentoService.entity.User;
+import br.com.fiap.app.agendamentoService.enums.StatusConsulta;
+import br.com.fiap.app.agendamentoService.exception.BusinessException;
+import br.com.fiap.app.agendamentoService.exception.ResourceNotFoundException;
+import br.com.fiap.app.agendamentoService.repository.ConsultaRepository;
+import br.com.fiap.app.agendamentoService.repository.EnfermeiroRepository;
+import br.com.fiap.app.agendamentoService.repository.MedicoRepository;
+import br.com.fiap.app.agendamentoService.repository.PacienteRepository;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ConsultaService Tests")
@@ -38,6 +45,12 @@ class ConsultaServiceTest {
 
     @Mock
     private PacienteRepository pacienteRepository;
+
+    @Mock
+    private EnfermeiroRepository enfermeiroRepository;
+
+    @Mock
+    private RabbitTemplate rabbitTemplate;
 
     @InjectMocks
     private ConsultaService consultaService;
@@ -53,11 +66,19 @@ class ConsultaServiceTest {
         futureDate = LocalDateTime.now().plusDays(1);
         pastDate = LocalDateTime.now().minusDays(1);
 
+        User medicoUser = new User();
+        medicoUser.setNome("Dr. Carlos");
+
         medico = new Medico();
         medico.setId(1L);
+        medico.setUser(medicoUser);
+
+        User pacienteUser = new User();
+        pacienteUser.setNome("João Silva");
 
         paciente = new Paciente();
         paciente.setId(1L);
+        paciente.setUser(pacienteUser);
 
         consulta = new Consulta();
         consulta.setId(1L);
@@ -88,7 +109,7 @@ class ConsultaServiceTest {
         assertThat(result.getMedico()).isEqualTo(medico);
         assertThat(result.getPaciente()).isEqualTo(paciente);
         assertThat(result.getDataCriacao()).isNotNull();
-        
+
         verify(medicoRepository).findById(1L);
         verify(pacienteRepository).findById(1L);
         verify(consultaRepository).save(any(Consulta.class));
@@ -106,7 +127,7 @@ class ConsultaServiceTest {
                 .hasMessageContaining("Médico")
                 .hasMessageContaining("ID")
                 .hasMessageContaining("1");
-        
+
         verify(medicoRepository).findById(1L);
         verify(pacienteRepository, never()).findById(any());
         verify(consultaRepository, never()).save(any());
@@ -125,7 +146,7 @@ class ConsultaServiceTest {
                 .hasMessageContaining("Paciente")
                 .hasMessageContaining("ID")
                 .hasMessageContaining("1");
-        
+
         verify(medicoRepository).findById(1L);
         verify(pacienteRepository).findById(1L);
         verify(consultaRepository, never()).save(any());
@@ -143,7 +164,7 @@ class ConsultaServiceTest {
         assertThatThrownBy(() -> consultaService.createConsulta(consulta))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("Data da consulta deve ser futura");
-        
+
         verify(consultaRepository, never()).save(any());
     }
 
@@ -222,7 +243,7 @@ class ConsultaServiceTest {
         assertThatThrownBy(() -> consultaService.getConsultasByMedico(1L))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Médico");
-        
+
         verify(consultaRepository, never()).findByMedico(any());
     }
 
@@ -363,14 +384,14 @@ class ConsultaServiceTest {
         // Given
         Consulta updateRequest = new Consulta();
         updateRequest.setDataHora(pastDate);
-        
+
         when(consultaRepository.findById(1L)).thenReturn(Optional.of(consulta));
 
         // When & Then
         assertThatThrownBy(() -> consultaService.updateConsulta(1L, updateRequest))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("Data da consulta deve ser futura");
-        
+
         verify(consultaRepository, never()).save(any());
     }
 
@@ -428,7 +449,7 @@ class ConsultaServiceTest {
         assertThatThrownBy(() -> consultaService.deleteConsulta(1L))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Consulta");
-        
+
         verify(consultaRepository, never()).delete(any());
     }
 
@@ -458,7 +479,201 @@ class ConsultaServiceTest {
         assertThatThrownBy(() -> consultaService.cancelarConsulta(1L, "Motivo"))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Consulta");
-        
+
         verify(consultaRepository, never()).save(any());
+    }
+
+    // ──────────────────────────────────────────────
+    // createConsulta with enfermeiro
+    // ──────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should create consulta with enfermeiro successfully")
+    void shouldCreateConsultaWithEnfermeiroSuccessfully() {
+        // Given
+        br.com.fiap.app.agendamentoService.entity.Enfermeiro enfermeiro =
+                new br.com.fiap.app.agendamentoService.entity.Enfermeiro();
+        enfermeiro.setId(1L);
+
+        consulta.setEnfermeiroId(1L);
+        when(medicoRepository.findById(1L)).thenReturn(Optional.of(medico));
+        when(pacienteRepository.findById(1L)).thenReturn(Optional.of(paciente));
+        when(enfermeiroRepository.findById(1L)).thenReturn(Optional.of(enfermeiro));
+        when(consultaRepository.save(any(Consulta.class))).thenReturn(consulta);
+
+        // When
+        Consulta result = consultaService.createConsulta(consulta);
+
+        // Then
+        assertThat(result).isNotNull();
+        verify(enfermeiroRepository).findById(1L);
+        verify(consultaRepository).save(any(Consulta.class));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when enfermeiro not found during consulta creation")
+    void shouldThrowExceptionWhenEnfermeiroNotFound() {
+        // Given
+        consulta.setEnfermeiroId(99L);
+        when(medicoRepository.findById(1L)).thenReturn(Optional.of(medico));
+        when(pacienteRepository.findById(1L)).thenReturn(Optional.of(paciente));
+        when(enfermeiroRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> consultaService.createConsulta(consulta))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Enfermeiro");
+
+        verify(consultaRepository, never()).save(any());
+    }
+
+    // ──────────────────────────────────────────────
+    // DTO methods
+    // ──────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Should get all consultas as DTO successfully")
+    void shouldGetAllConsultasDTOSuccessfully() {
+        // Given
+        when(consultaRepository.findAll()).thenReturn(Arrays.asList(consulta));
+
+        // When
+        var result = consultaService.getAllConsultasDTO();
+
+        // Then
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getId()).isEqualTo(consulta.getId());
+        verify(consultaRepository).findAll();
+    }
+
+    @Test
+    @DisplayName("Should get consultas by medico as DTO successfully")
+    void shouldGetConsultasByMedicoDTOSuccessfully() {
+        // Given
+        when(medicoRepository.findById(1L)).thenReturn(Optional.of(medico));
+        when(consultaRepository.findByMedico(medico)).thenReturn(Arrays.asList(consulta));
+
+        // When
+        var result = consultaService.getConsultasByMedicoDTO(1L);
+
+        // Then
+        assertThat(result).hasSize(1);
+        verify(medicoRepository).findById(1L);
+        verify(consultaRepository).findByMedico(medico);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when getting consultas by medico DTO with non-existent medico")
+    void shouldThrowExceptionWhenGetConsultasByMedicoDTOMedicoNotFound() {
+        // Given
+        when(medicoRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> consultaService.getConsultasByMedicoDTO(1L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Médico");
+        verify(consultaRepository, never()).findByMedico(any());
+    }
+
+    @Test
+    @DisplayName("Should get consultas by paciente as DTO successfully")
+    void shouldGetConsultasByPacienteDTOSuccessfully() {
+        // Given
+        when(pacienteRepository.findById(1L)).thenReturn(Optional.of(paciente));
+        when(consultaRepository.findByPaciente(paciente)).thenReturn(Arrays.asList(consulta));
+
+        // When
+        var result = consultaService.getConsultasByPacienteDTO(1L);
+
+        // Then
+        assertThat(result).hasSize(1);
+        verify(pacienteRepository).findById(1L);
+        verify(consultaRepository).findByPaciente(paciente);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when getting consultas by paciente DTO with non-existent paciente")
+    void shouldThrowExceptionWhenGetConsultasByPacienteDTOPacienteNotFound() {
+        // Given
+        when(pacienteRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> consultaService.getConsultasByPacienteDTO(1L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Paciente");
+        verify(consultaRepository, never()).findByPaciente(any());
+    }
+
+    @Test
+    @DisplayName("Should get consultas by status as DTO successfully")
+    void shouldGetConsultasByStatusDTOSuccessfully() {
+        // Given
+        when(consultaRepository.findByStatus(StatusConsulta.AGENDADA)).thenReturn(Arrays.asList(consulta));
+
+        // When
+        var result = consultaService.getConsultasByStatusDTO(StatusConsulta.AGENDADA);
+
+        // Then
+        assertThat(result).hasSize(1);
+        verify(consultaRepository).findByStatus(StatusConsulta.AGENDADA);
+    }
+
+    @Test
+    @DisplayName("Should get consultas by periodo as DTO successfully")
+    void shouldGetConsultasByPeriodoDTOSuccessfully() {
+        // Given
+        LocalDateTime inicio = LocalDateTime.now();
+        LocalDateTime fim = LocalDateTime.now().plusDays(7);
+        when(consultaRepository.findByPeriodo(inicio, fim)).thenReturn(Arrays.asList(consulta));
+
+        // When
+        var result = consultaService.getConsultasByPeriodoDTO(inicio, fim);
+
+        // Then
+        assertThat(result).hasSize(1);
+        verify(consultaRepository).findByPeriodo(inicio, fim);
+    }
+
+    @Test
+    @DisplayName("Should get consultas futuras por paciente as DTO successfully")
+    void shouldGetConsultasFuturasPorPacienteDTOSuccessfully() {
+        // Given
+        when(pacienteRepository.findById(1L)).thenReturn(Optional.of(paciente));
+        when(consultaRepository.findConsultasFuturasPorPaciente(eq(paciente), any(LocalDateTime.class)))
+                .thenReturn(Arrays.asList(consulta));
+
+        // When
+        var result = consultaService.getConsultasFuturasPorPacienteDTO(1L);
+
+        // Then
+        assertThat(result).hasSize(1);
+        verify(pacienteRepository).findById(1L);
+        verify(consultaRepository).findConsultasFuturasPorPaciente(eq(paciente), any(LocalDateTime.class));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when getting consultas futuras DTO with non-existent paciente")
+    void shouldThrowExceptionWhenGetConsultasFuturasDTOPacienteNotFound() {
+        // Given
+        when(pacienteRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> consultaService.getConsultasFuturasPorPacienteDTO(1L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Paciente");
+    }
+
+    @Test
+    @DisplayName("Should get historico completo paciente as DTO successfully")
+    void shouldGetHistoricoCompletoPacienteDTOSuccessfully() {
+        // Given
+        when(consultaRepository.findHistoricoCompletoPaciente(1L)).thenReturn(Arrays.asList(consulta));
+
+        // When
+        var result = consultaService.getHistoricoCompletoPacienteDTO(1L);
+
+        // Then
+        assertThat(result).hasSize(1);
+        verify(consultaRepository).findHistoricoCompletoPaciente(1L);
     }
 }
