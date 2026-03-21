@@ -1,5 +1,14 @@
 package br.com.fiap.app.agendamentoService.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.fiap.app.agendamentoService.config.RabbitMQConfig;
+import br.com.fiap.app.agendamentoService.dto.ConsultaAgendadaEvent;
 import br.com.fiap.app.agendamentoService.dto.ConsultaResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Consulta;
 import br.com.fiap.app.agendamentoService.entity.Enfermeiro;
@@ -14,11 +23,6 @@ import br.com.fiap.app.agendamentoService.repository.EnfermeiroRepository;
 import br.com.fiap.app.agendamentoService.repository.MedicoRepository;
 import br.com.fiap.app.agendamentoService.repository.PacienteRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +33,8 @@ public class ConsultaService {
     private final MedicoRepository medicoRepository;
     private final PacienteRepository pacienteRepository;
     private final EnfermeiroRepository enfermeiroRepository;
+
+    private final RabbitTemplate rabbitTemplate;
 
     public Consulta createConsulta(Consulta request) {
         Medico medico = medicoRepository.findById(request.getMedicoId())
@@ -44,20 +50,33 @@ public class ConsultaService {
         Consulta consulta = new Consulta();
         consulta.setMedico(medico);
         consulta.setPaciente(paciente);
-        
+
         if (request.getEnfermeiroId() != null) {
             Enfermeiro enfermeiro = enfermeiroRepository.findById(request.getEnfermeiroId())
                     .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "ID", request.getEnfermeiroId()));
             consulta.setEnfermeiro(enfermeiro);
         }
-        
+
         consulta.setDataHora(request.getDataHora());
         consulta.setMotivo(request.getMotivo());
         consulta.setObservacoes(request.getObservacoes());
         consulta.setStatus(StatusConsulta.AGENDADA);
         consulta.setDataCriacao(LocalDateTime.now());
 
-        return consultaRepository.save(consulta);
+        Consulta savedConsulta = consultaRepository.save(consulta);
+
+        ConsultaAgendadaEvent event = ConsultaAgendadaEvent.builder()
+                .consultaId(savedConsulta.getId())
+                .pacienteNome(savedConsulta.getPaciente().getUser().getNome())
+                .medicoNome(savedConsulta.getMedico().getUser().getNome())
+                .dataHora(savedConsulta.getDataHora())
+                .status(savedConsulta.getStatus().name())
+                .motivo(savedConsulta.getMotivo())
+                .build();
+
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, event);
+
+        return savedConsulta;
     }
 
     @Transactional(readOnly = true)
