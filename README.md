@@ -88,22 +88,17 @@ Fluxo:
 
 ---
 
-## 🐳 Subindo o RabbitMQ
-```bash
-docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-```
-Painel:
-http://localhost:15672
-user: guest
-password: guest
-
----
-
 ## ▶️ Como executar o projeto
 
-1. Subir o RabbitMQ
-2. Executar o agendamento-service
-3. Executar o notificacao-service
+1. Subir a infraestrutura (PostgreSQL + RabbitMQ):
+```bash
+docker compose up -d
+```
+  - PostgreSQL: `localhost:5432` — database `hospital_system`, user `postgres` / senha `postgres`
+  - RabbitMQ: painel em http://localhost:15672 — user `guest` / senha `guest`
+
+2. Executar o `agendamento-service` (porta 8080)
+3. Executar o `notificacao-service` (porta 8081)
 
 ---
 
@@ -115,6 +110,8 @@ password: guest
 - Spring Data JPA
 - Spring GraphQL
 - RabbitMQ
+- PostgreSQL
+- Docker / Docker Compose
 - Maven
 
 ---
