@@ -11,6 +11,11 @@ spring:
     console:
       enabled: true
 
+rabbitmq:
+  exchange: hospital.exchange
+  queue: consulta.agendada.queue
+  routing-key: consulta.agendada
+
 logging:
   level:
     root: INFO

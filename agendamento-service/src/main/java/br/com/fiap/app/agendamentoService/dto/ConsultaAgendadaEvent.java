@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ConsultaAgendadaEvent {
     private Long consultaId;
+    private Long pacienteId;
     private String pacienteNome;
     private String medicoNome;
     private LocalDateTime dataHora;
