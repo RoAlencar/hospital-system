@@ -58,6 +58,8 @@ type EnfermeiroSimpleType {
 type MedicoType {
   id: ID
   nome: String
+  email: String
+  telefone: String
   crm: String
   especialidade: Especialidade
   descricao: String
@@ -67,10 +69,15 @@ type MedicoType {
 type PacienteType {
   id: ID
   nome: String
+  email: String
+  telefone: String
   cpf: String
   dataNascimento: String
   endereco: String
+  numeroCartaoSus: String
   convenioMedico: String
+  contatoEmergencia: String
+  observacoesMedicas: String
   ativo: Boolean
 }
 
