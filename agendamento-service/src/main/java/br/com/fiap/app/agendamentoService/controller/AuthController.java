@@ -1,14 +1,5 @@
 package br.com.fiap.app.agendamentoService.controller;
 
-import br.com.fiap.app.agendamentoService.dto.LoginRequest;
-import br.com.fiap.app.agendamentoService.dto.LoginResponse;
-import br.com.fiap.app.agendamentoService.dto.RegisterRequest;
-import br.com.fiap.app.agendamentoService.dto.UserInfoResponse;
-import br.com.fiap.app.agendamentoService.entity.User;
-import br.com.fiap.app.agendamentoService.enums.Role;
-import br.com.fiap.app.agendamentoService.service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +7,22 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.fiap.app.agendamentoService.dto.LoginRequest;
+import br.com.fiap.app.agendamentoService.dto.LoginResponse;
+import br.com.fiap.app.agendamentoService.dto.RegisterRequest;
+import br.com.fiap.app.agendamentoService.dto.UserInfoResponse;
+import br.com.fiap.app.agendamentoService.entity.User;
+import br.com.fiap.app.agendamentoService.enums.Role;
+import br.com.fiap.app.agendamentoService.exception.BusinessException;
+import br.com.fiap.app.agendamentoService.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
@@ -80,9 +86,9 @@ public class AuthController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(userInfo);
 
-        } catch (Exception e) {
+        } catch (BusinessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Erro ao registrar usuário: " + e.getMessage());
+                .body(e.getMessage());
         }
     }
 
