@@ -16,8 +16,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        "[format_sql]": true
-    show-sql: true
+    show-sql: false
 
   # Configurações do RabbitMQ
   rabbitmq:
@@ -31,6 +30,24 @@ spring:
       path: /graphiql
     http:
       path: /graphql
+
+# Configurações do RabbitMQ (Custom Properties)
+rabbitmq:
+  exchange: hospital.exchange
+  queue: consulta.agendada.queue
+  routing-key: consulta.agendada
+  dlq-exchange: hospital.dlq.exchange
+  dlq-queue: consulta.agendada.dlq
+
+# Configurações do Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
 
 # Configurações do servidor
 server:
