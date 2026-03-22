@@ -23,6 +23,7 @@ public class RegisterRequest {
     @NotBlank(message = "Email é obrigatório")
     @Email(message = "Email deve ter formato válido")
     private String email;
-    
+
+    @NotBlank(message = "Telefone é obrigatório")
     private String telefone;
 }

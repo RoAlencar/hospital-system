@@ -45,7 +45,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String email;
     
-    @Column
+    @NotBlank(message = "Telefone é obrigatório")
+    @Column(nullable = false)
     private String telefone;
     
     @NotNull(message = "Role é obrigatório")
