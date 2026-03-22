@@ -1,5 +1,11 @@
 package br.com.fiap.app.agendamentoService.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.fiap.app.agendamentoService.constants.EntityNames;
 import br.com.fiap.app.agendamentoService.entity.Paciente;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.exception.BusinessException;
@@ -7,10 +13,6 @@ import br.com.fiap.app.agendamentoService.exception.ResourceNotFoundException;
 import br.com.fiap.app.agendamentoService.repository.PacienteRepository;
 import br.com.fiap.app.agendamentoService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class PacienteService {
         }
 
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", request.getUserId()));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", request.getUserId()));
 
         request.setUser(user);
         request.setAtivo(true);
@@ -36,19 +38,19 @@ public class PacienteService {
     @Transactional(readOnly = true)
     public Paciente getPacienteById(Long id) {
         return pacienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", id));
     }
 
     @Transactional(readOnly = true)
     public Paciente getPacienteByCpf(String cpf) {
         return pacienteRepository.findByCpf(cpf)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "CPF", cpf));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "CPF", cpf));
     }
 
     @Transactional(readOnly = true)
     public Paciente getPacienteByUserId(Long userId) {
         return pacienteRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "User ID", userId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "User ID", userId));
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +70,7 @@ public class PacienteService {
 
     public Paciente updatePaciente(Long id, Paciente request) {
         Paciente paciente = pacienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", id));
 
         if (request.getCpf() != null) {
             if (!paciente.getCpf().equals(request.getCpf()) && pacienteRepository.existsByCpf(request.getCpf())) {
@@ -103,20 +105,27 @@ public class PacienteService {
 
     public void deletePaciente(Long id) {
         Paciente paciente = pacienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", id));
         pacienteRepository.delete(paciente);
     }
 
     public void deactivatePaciente(Long id) {
         Paciente paciente = pacienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", id));
         paciente.setAtivo(false);
         pacienteRepository.save(paciente);
     }
 
+    @Transactional(readOnly = true)
+    public boolean isOwnedByUser(Long pacienteId, Long userId) {
+        return pacienteRepository.findByUserId(userId)
+                .map(p -> p.getId().equals(pacienteId))
+                .orElse(false);
+    }
+
     public void activatePaciente(Long id) {
         Paciente paciente = pacienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", id));
         paciente.setAtivo(true);
         pacienteRepository.save(paciente);
     }

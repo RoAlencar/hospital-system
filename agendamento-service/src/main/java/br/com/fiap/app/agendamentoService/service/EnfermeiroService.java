@@ -1,5 +1,11 @@
 package br.com.fiap.app.agendamentoService.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.fiap.app.agendamentoService.constants.EntityNames;
 import br.com.fiap.app.agendamentoService.entity.Enfermeiro;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.exception.BusinessException;
@@ -7,10 +13,6 @@ import br.com.fiap.app.agendamentoService.exception.ResourceNotFoundException;
 import br.com.fiap.app.agendamentoService.repository.EnfermeiroRepository;
 import br.com.fiap.app.agendamentoService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class EnfermeiroService {
         }
 
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", request.getUserId()));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", request.getUserId()));
 
         request.setUser(user);
         request.setAtivo(true);
@@ -36,19 +38,19 @@ public class EnfermeiroService {
     @Transactional(readOnly = true)
     public Enfermeiro getEnfermeiroById(Long id) {
         return enfermeiroRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "ID", id));
     }
 
     @Transactional(readOnly = true)
     public Enfermeiro getEnfermeiroByCoren(String coren) {
         return enfermeiroRepository.findByCoren(coren)
-                .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "COREN", coren));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "COREN", coren));
     }
 
     @Transactional(readOnly = true)
     public Enfermeiro getEnfermeiroByUserId(Long userId) {
         return enfermeiroRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "User ID", userId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "User ID", userId));
     }
 
     @Transactional(readOnly = true)
@@ -88,7 +90,7 @@ public class EnfermeiroService {
 
     public Enfermeiro updateEnfermeiro(Long id, Enfermeiro request) {
         Enfermeiro enfermeiro = enfermeiroRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "ID", id));
 
         if (request.getCoren() != null) {
             if (!enfermeiro.getCoren().equals(request.getCoren()) && enfermeiroRepository.existsByCoren(request.getCoren())) {
@@ -117,20 +119,20 @@ public class EnfermeiroService {
 
     public void deleteEnfermeiro(Long id) {
         Enfermeiro enfermeiro = enfermeiroRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "ID", id));
         enfermeiroRepository.delete(enfermeiro);
     }
 
     public void deactivateEnfermeiro(Long id) {
         Enfermeiro enfermeiro = enfermeiroRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "ID", id));
         enfermeiro.setAtivo(false);
         enfermeiroRepository.save(enfermeiro);
     }
 
     public void activateEnfermeiro(Long id) {
         Enfermeiro enfermeiro = enfermeiroRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "ID", id));
         enfermeiro.setAtivo(true);
         enfermeiroRepository.save(enfermeiro);
     }

@@ -1,16 +1,18 @@
 package br.com.fiap.app.agendamentoService.service;
 
+import java.util.List;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.fiap.app.agendamentoService.constants.EntityNames;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.enums.Role;
 import br.com.fiap.app.agendamentoService.exception.BusinessException;
 import br.com.fiap.app.agendamentoService.exception.ResourceNotFoundException;
 import br.com.fiap.app.agendamentoService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +38,13 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", id));
     }
 
     @Transactional(readOnly = true)
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "username", username));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "username", username));
     }
 
     @Transactional(readOnly = true)
@@ -62,7 +64,7 @@ public class UserService {
 
     public User updateUser(Long id, User request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", id));
 
         if (request.getNome() != null) {
             user.setNome(request.getNome());
@@ -88,13 +90,13 @@ public class UserService {
 
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", id));
         userRepository.delete(user);
     }
 
     public void deactivateUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", id));
         user.setActive(false);
         userRepository.save(user);
     }
@@ -118,7 +120,7 @@ public class UserService {
 
     public void activateUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", id));
         user.setActive(true);
         userRepository.save(user);
     }
