@@ -1,5 +1,7 @@
 package br.com.fiap.app.agendamentoService.controller;
 
+import br.com.fiap.app.agendamentoService.dto.MedicoRequestDTO;
+import br.com.fiap.app.agendamentoService.dto.MedicoResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Medico;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.enums.Especialidade;
@@ -35,6 +37,8 @@ class MedicoControllerTest {
 
     private Medico medico;
     private User user;
+    private MedicoRequestDTO medicoRequest;
+    private MedicoResponseDTO medicoResponse;
 
     @BeforeEach
     void setUp() {
@@ -54,6 +58,16 @@ class MedicoControllerTest {
         medico.setDescricao("Cardiologista experiente");
         medico.setAtivo(true);
         medico.setUser(user);
+
+        medicoRequest = new MedicoRequestDTO();
+        medicoRequest.setUserId(1L);
+        medicoRequest.setCrm("123456");
+        medicoRequest.setEspecialidade(Especialidade.CARDIOLOGIA);
+        medicoRequest.setDescricao("Cardiologista experiente");
+
+        medicoResponse = new MedicoResponseDTO(
+                1L, "Dr. João Silva", "joao@hospital.com", null,
+                "123456", Especialidade.CARDIOLOGIA, "Cardiologista experiente", true);
     }
 
     @Test
@@ -61,10 +75,10 @@ class MedicoControllerTest {
     void shouldCreateMedicoAndReturn201() {
         when(medicoService.createMedico(any(Medico.class))).thenReturn(medico);
 
-        ResponseEntity<Medico> response = medicoController.createMedico(medico);
+        ResponseEntity<MedicoResponseDTO> response = medicoController.createMedico(medicoRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(medico);
+        assertThat(response.getBody()).isEqualTo(medicoResponse);
         verify(medicoService).createMedico(any(Medico.class));
     }
 
@@ -73,10 +87,10 @@ class MedicoControllerTest {
     void shouldGetMedicoByIdAndReturn200() {
         when(medicoService.getMedicoById(1L)).thenReturn(medico);
 
-        ResponseEntity<Medico> response = medicoController.getMedicoById(1L);
+        ResponseEntity<MedicoResponseDTO> response = medicoController.getMedicoById(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(medico);
+        assertThat(response.getBody()).isEqualTo(medicoResponse);
         verify(medicoService).getMedicoById(1L);
     }
 
@@ -85,10 +99,10 @@ class MedicoControllerTest {
     void shouldGetMedicoByCrmAndReturn200() {
         when(medicoService.getMedicoByCrm("123456")).thenReturn(medico);
 
-        ResponseEntity<Medico> response = medicoController.getMedicoByCrm("123456");
+        ResponseEntity<MedicoResponseDTO> response = medicoController.getMedicoByCrm("123456");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(medico);
+        assertThat(response.getBody()).isEqualTo(medicoResponse);
         verify(medicoService).getMedicoByCrm("123456");
     }
 
@@ -97,10 +111,10 @@ class MedicoControllerTest {
     void shouldGetMedicoByUserIdAndReturn200() {
         when(medicoService.getMedicoByUserId(1L)).thenReturn(medico);
 
-        ResponseEntity<Medico> response = medicoController.getMedicoByUserId(1L);
+        ResponseEntity<MedicoResponseDTO> response = medicoController.getMedicoByUserId(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(medico);
+        assertThat(response.getBody()).isEqualTo(medicoResponse);
         verify(medicoService).getMedicoByUserId(1L);
     }
 
@@ -110,7 +124,7 @@ class MedicoControllerTest {
         List<Medico> medicos = Arrays.asList(medico);
         when(medicoService.getAllMedicos()).thenReturn(medicos);
 
-        ResponseEntity<List<Medico>> response = medicoController.getAllMedicos();
+        ResponseEntity<List<MedicoResponseDTO>> response = medicoController.getAllMedicos();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -123,7 +137,7 @@ class MedicoControllerTest {
         List<Medico> medicos = Arrays.asList(medico);
         when(medicoService.getMedicosByEspecialidade(Especialidade.CARDIOLOGIA)).thenReturn(medicos);
 
-        ResponseEntity<List<Medico>> response = medicoController.getMedicosByEspecialidade(Especialidade.CARDIOLOGIA);
+        ResponseEntity<List<MedicoResponseDTO>> response = medicoController.getMedicosByEspecialidade(Especialidade.CARDIOLOGIA);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -136,7 +150,7 @@ class MedicoControllerTest {
         List<Medico> medicos = Arrays.asList(medico);
         when(medicoService.getActiveMedicos()).thenReturn(medicos);
 
-        ResponseEntity<List<Medico>> response = medicoController.getActiveMedicos();
+        ResponseEntity<List<MedicoResponseDTO>> response = medicoController.getActiveMedicos();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -149,7 +163,7 @@ class MedicoControllerTest {
         List<Medico> medicos = Arrays.asList(medico);
         when(medicoService.getMedicosByNome("João")).thenReturn(medicos);
 
-        ResponseEntity<List<Medico>> response = medicoController.searchMedicosByNome("João");
+        ResponseEntity<List<MedicoResponseDTO>> response = medicoController.searchMedicosByNome("João");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -159,12 +173,13 @@ class MedicoControllerTest {
     @Test
     @DisplayName("Should update medico and return 200")
     void shouldUpdateMedicoAndReturn200() {
+        when(medicoService.getMedicoById(1L)).thenReturn(medico);
         when(medicoService.updateMedico(eq(1L), any(Medico.class))).thenReturn(medico);
 
-        ResponseEntity<Medico> response = medicoController.updateMedico(1L, medico);
+        ResponseEntity<MedicoResponseDTO> response = medicoController.updateMedico(1L, medicoRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(medico);
+        assertThat(response.getBody()).isEqualTo(medicoResponse);
         verify(medicoService).updateMedico(eq(1L), any(Medico.class));
     }
 

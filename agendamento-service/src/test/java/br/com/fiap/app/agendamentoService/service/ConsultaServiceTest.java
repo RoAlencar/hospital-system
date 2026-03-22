@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import br.com.fiap.app.agendamentoService.dto.ConsultaResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Consulta;
 import br.com.fiap.app.agendamentoService.entity.Medico;
 import br.com.fiap.app.agendamentoService.entity.Paciente;
@@ -538,7 +539,7 @@ class ConsultaServiceTest {
         when(consultaRepository.findAll()).thenReturn(Arrays.asList(consulta));
 
         // When
-        var result = consultaService.getAllConsultasDTO();
+        List<ConsultaResponseDTO> result = consultaService.getAllConsultasDTO();
 
         // Then
         assertThat(result).hasSize(1);
@@ -554,7 +555,7 @@ class ConsultaServiceTest {
         when(consultaRepository.findByMedico(medico)).thenReturn(Arrays.asList(consulta));
 
         // When
-        var result = consultaService.getConsultasByMedicoDTO(1L);
+        List<ConsultaResponseDTO> result = consultaService.getConsultasByMedicoDTO(1L);
 
         // Then
         assertThat(result).hasSize(1);
@@ -583,7 +584,7 @@ class ConsultaServiceTest {
         when(consultaRepository.findByPaciente(paciente)).thenReturn(Arrays.asList(consulta));
 
         // When
-        var result = consultaService.getConsultasByPacienteDTO(1L);
+        List<ConsultaResponseDTO> result = consultaService.getConsultasByPacienteDTO(1L);
 
         // Then
         assertThat(result).hasSize(1);
@@ -611,7 +612,7 @@ class ConsultaServiceTest {
         when(consultaRepository.findByStatus(StatusConsulta.AGENDADA)).thenReturn(Arrays.asList(consulta));
 
         // When
-        var result = consultaService.getConsultasByStatusDTO(StatusConsulta.AGENDADA);
+        List<ConsultaResponseDTO> result = consultaService.getConsultasByStatusDTO(StatusConsulta.AGENDADA);
 
         // Then
         assertThat(result).hasSize(1);
@@ -627,7 +628,7 @@ class ConsultaServiceTest {
         when(consultaRepository.findByPeriodo(inicio, fim)).thenReturn(Arrays.asList(consulta));
 
         // When
-        var result = consultaService.getConsultasByPeriodoDTO(inicio, fim);
+        List<ConsultaResponseDTO> result = consultaService.getConsultasByPeriodoDTO(inicio, fim);
 
         // Then
         assertThat(result).hasSize(1);
@@ -643,7 +644,7 @@ class ConsultaServiceTest {
                 .thenReturn(Arrays.asList(consulta));
 
         // When
-        var result = consultaService.getConsultasFuturasPorPacienteDTO(1L);
+        List<ConsultaResponseDTO> result = consultaService.getConsultasFuturasPorPacienteDTO(1L);
 
         // Then
         assertThat(result).hasSize(1);
@@ -670,7 +671,7 @@ class ConsultaServiceTest {
         when(consultaRepository.findHistoricoCompletoPaciente(1L)).thenReturn(Arrays.asList(consulta));
 
         // When
-        var result = consultaService.getHistoricoCompletoPacienteDTO(1L);
+        List<ConsultaResponseDTO> result = consultaService.getHistoricoCompletoPacienteDTO(1L);
 
         // Then
         assertThat(result).hasSize(1);
