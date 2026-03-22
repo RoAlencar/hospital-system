@@ -27,7 +27,6 @@ import br.com.fiap.app.agendamentoService.enums.Especialidade;
 import br.com.fiap.app.agendamentoService.enums.StatusConsulta;
 import br.com.fiap.app.agendamentoService.exception.BusinessException;
 import br.com.fiap.app.agendamentoService.service.ConsultaService;
-import br.com.fiap.app.agendamentoService.service.PacienteService;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ConsultaGraphQLController Tests")
@@ -35,9 +34,6 @@ class ConsultaGraphQLControllerTest {
 
     @Mock
     private ConsultaService consultaService;
-
-    @Mock
-    private PacienteService pacienteService;
 
     @InjectMocks
     private ConsultaGraphQLController consultaGraphQLController;

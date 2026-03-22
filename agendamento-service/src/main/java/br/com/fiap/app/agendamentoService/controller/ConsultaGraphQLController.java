@@ -18,7 +18,6 @@ import br.com.fiap.app.agendamentoService.enums.StatusConsulta;
 import br.com.fiap.app.agendamentoService.exception.BusinessException;
 import br.com.fiap.app.agendamentoService.mapper.ConsultaMapper;
 import br.com.fiap.app.agendamentoService.service.ConsultaService;
-import br.com.fiap.app.agendamentoService.service.PacienteService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -26,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class ConsultaGraphQLController {
 
     private final ConsultaService consultaService;
-    private final PacienteService pacienteService;
 
     @QueryMapping
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
