@@ -6,5 +6,9 @@ spring:
     port: 5672
     username: guest
     password: guest
+rabbitmq:
+  queue: consulta.agendada.queue
+  dlq-exchange: hospital.dlq.exchange
+  dlq-queue: consulta.agendada.dlq
 server:
   port: 8081
