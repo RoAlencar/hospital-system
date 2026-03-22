@@ -16,6 +16,7 @@ class ConsultaAgendadaEventTest {
 
         assertThat(event).isNotNull();
         assertThat(event.getConsultaId()).isNull();
+        assertThat(event.getPacienteId()).isNull();
         assertThat(event.getPacienteNome()).isNull();
         assertThat(event.getMedicoNome()).isNull();
         assertThat(event.getDataHora()).isNull();
@@ -29,6 +30,7 @@ class ConsultaAgendadaEventTest {
         LocalDateTime dataHora = LocalDateTime.of(2026, 4, 1, 10, 0);
         ConsultaAgendadaEvent event = new ConsultaAgendadaEvent(
                 1L,
+                10L,
                 "Maria da Silva",
                 "Dr. João Santos",
                 dataHora,
@@ -37,6 +39,7 @@ class ConsultaAgendadaEventTest {
         );
 
         assertThat(event.getConsultaId()).isEqualTo(1L);
+        assertThat(event.getPacienteId()).isEqualTo(10L);
         assertThat(event.getPacienteNome()).isEqualTo("Maria da Silva");
         assertThat(event.getMedicoNome()).isEqualTo("Dr. João Santos");
         assertThat(event.getDataHora()).isEqualTo(dataHora);
@@ -51,6 +54,7 @@ class ConsultaAgendadaEventTest {
         ConsultaAgendadaEvent event = new ConsultaAgendadaEvent();
 
         event.setConsultaId(10L);
+        event.setPacienteId(99L);
         event.setPacienteNome("Carlos Ferreira");
         event.setMedicoNome("Dra. Ana Lima");
         event.setDataHora(dataHora);
@@ -58,6 +62,7 @@ class ConsultaAgendadaEventTest {
         event.setMotivo("Retorno pós-cirurgia");
 
         assertThat(event.getConsultaId()).isEqualTo(10L);
+        assertThat(event.getPacienteId()).isEqualTo(99L);
         assertThat(event.getPacienteNome()).isEqualTo("Carlos Ferreira");
         assertThat(event.getMedicoNome()).isEqualTo("Dra. Ana Lima");
         assertThat(event.getDataHora()).isEqualTo(dataHora);
@@ -69,8 +74,8 @@ class ConsultaAgendadaEventTest {
     @DisplayName("Should test equality of two events with same data")
     void shouldTestEqualityOfTwoEventsWithSameData() {
         LocalDateTime dataHora = LocalDateTime.of(2026, 4, 1, 10, 0);
-        ConsultaAgendadaEvent event1 = new ConsultaAgendadaEvent(1L, "Maria", "Dr. João", dataHora, "AGENDADA", "Rotina");
-        ConsultaAgendadaEvent event2 = new ConsultaAgendadaEvent(1L, "Maria", "Dr. João", dataHora, "AGENDADA", "Rotina");
+        ConsultaAgendadaEvent event1 = new ConsultaAgendadaEvent(1L, 10L, "Maria", "Dr. João", dataHora, "AGENDADA", "Rotina");
+        ConsultaAgendadaEvent event2 = new ConsultaAgendadaEvent(1L, 10L, "Maria", "Dr. João", dataHora, "AGENDADA", "Rotina");
 
         assertThat(event1).isEqualTo(event2);
         assertThat(event1.hashCode()).isEqualTo(event2.hashCode());
@@ -80,7 +85,7 @@ class ConsultaAgendadaEventTest {
     @DisplayName("Should generate toString representation")
     void shouldGenerateToStringRepresentation() {
         ConsultaAgendadaEvent event = new ConsultaAgendadaEvent(
-                5L, "Ana Costa", "Dr. Pedro", LocalDateTime.now(), "AGENDADA", "Exame"
+                5L, 20L, "Ana Costa", "Dr. Pedro", LocalDateTime.now(), "AGENDADA", "Exame"
         );
 
         String toString = event.toString();
