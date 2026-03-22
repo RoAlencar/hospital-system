@@ -25,6 +25,12 @@ spring:
       port: 5672
       username: guest
       password: guest
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
+    http:
+      path: /graphql
 
 # Configurações do servidor
 server:

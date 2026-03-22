@@ -1,0 +1,111 @@
+type Query {
+  consultas: [ConsultaType]
+  consulta(id: ID!): ConsultaType
+  consultasByMedico(medicoId: ID!): [ConsultaType]
+  consultasByPaciente(pacienteId: ID!): [ConsultaType]
+  consultasFuturasByPaciente(pacienteId: ID!): [ConsultaType]
+  historicoCompletoPaciente(pacienteId: ID!): [ConsultaType]
+  consultasByStatus(status: StatusConsulta!): [ConsultaType]
+
+  medicos: [MedicoType]
+  medico(id: ID!): MedicoType
+  medicosByEspecialidade(especialidade: Especialidade!): [MedicoType]
+
+  pacientes: [PacienteType]
+  paciente(id: ID!): PacienteType
+}
+
+type Mutation {
+  agendarConsulta(input: ConsultaInput!): ConsultaType
+  atualizarStatusConsulta(id: ID!, status: StatusConsulta!): ConsultaType
+  cancelarConsulta(id: ID!, motivo: String!): Boolean
+}
+
+type ConsultaType {
+  id: ID
+  medico: MedicoSimpleType
+  paciente: PacienteSimpleType
+  enfermeiro: EnfermeiroSimpleType
+  dataHora: String
+  status: StatusConsulta
+  motivo: String
+  observacoes: String
+  diagnostico: String
+  prescricao: String
+  dataCriacao: String
+  dataAlteracao: String
+}
+
+type MedicoSimpleType {
+  id: ID
+  nome: String
+  crm: String
+  especialidade: Especialidade
+}
+
+type PacienteSimpleType {
+  id: ID
+  nome: String
+  cpf: String
+}
+
+type EnfermeiroSimpleType {
+  id: ID
+  nome: String
+  coren: String
+}
+
+type MedicoType {
+  id: ID
+  nome: String
+  crm: String
+  especialidade: Especialidade
+  descricao: String
+  ativo: Boolean
+}
+
+type PacienteType {
+  id: ID
+  nome: String
+  cpf: String
+  dataNascimento: String
+  endereco: String
+  convenioMedico: String
+  ativo: Boolean
+}
+
+input ConsultaInput {
+  medicoId: ID!
+  pacienteId: ID!
+  enfermeiroId: ID
+  dataHora: String!
+  motivo: String
+  observacoes: String
+}
+
+enum StatusConsulta {
+  AGENDADA
+  CONFIRMADA
+  EM_ANDAMENTO
+  CONCLUIDA
+  CANCELADA
+  REAGENDADA
+  FALTA_PACIENTE
+}
+
+enum Especialidade {
+  CARDIOLOGIA
+  DERMATOLOGIA
+  ENDOCRINOLOGIA
+  GASTROENTEROLOGIA
+  GINECOLOGIA
+  NEUROLOGIA
+  OFTALMOLOGIA
+  ORTOPEDIA
+  OTORRINOLARINGOLOGIA
+  PEDIATRIA
+  PSIQUIATRIA
+  RADIOLOGIA
+  UROLOGIA
+  CLINICA_GERAL
+}
