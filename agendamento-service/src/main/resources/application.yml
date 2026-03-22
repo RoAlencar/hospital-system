@@ -26,6 +26,16 @@ spring:
       username: guest
       password: guest
 
+  # Configurações do GraphQL
+  graphql:
+    graphiql:
+      enabled: true
+    schema:
+      printer:
+        enabled: true
+    http:
+      path: /graphql
+
 # Configurações do servidor
 server:
   port: 8080
