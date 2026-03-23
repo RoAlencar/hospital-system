@@ -1,5 +1,6 @@
 package br.com.fiap.app.agendamentoService.mapper;
 
+import br.com.fiap.app.agendamentoService.dto.ConsultaRequestDTO;
 import br.com.fiap.app.agendamentoService.dto.ConsultaResponseDTO;
 import br.com.fiap.app.agendamentoService.dto.EnfermeiroSimpleDTO;
 import br.com.fiap.app.agendamentoService.dto.MedicoSimpleDTO;
@@ -65,5 +66,22 @@ public class ConsultaMapper {
                 enfermeiro.getUser() != null ? enfermeiro.getUser().getNome() : null,
                 enfermeiro.getCoren()
         );
+    }
+
+    public static Consulta fromDTO(ConsultaRequestDTO dto) {
+        if (dto == null) return null;
+        Consulta consulta = new Consulta();
+        consulta.setMedicoId(dto.getMedicoId());
+        consulta.setPacienteId(dto.getPacienteId());
+        consulta.setEnfermeiroId(dto.getEnfermeiroId());
+        consulta.setDataHora(dto.getDataHora());
+        if (dto.getStatus() != null) {
+            consulta.setStatus(dto.getStatus());
+        }
+        consulta.setMotivo(dto.getMotivo());
+        consulta.setObservacoes(dto.getObservacoes());
+        consulta.setDiagnostico(dto.getDiagnostico());
+        consulta.setPrescricao(dto.getPrescricao());
+        return consulta;
     }
 }

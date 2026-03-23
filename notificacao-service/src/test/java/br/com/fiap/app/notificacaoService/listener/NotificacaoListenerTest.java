@@ -7,9 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.fiap.app.notificacaoService.dto.ConsultaAgendadaEvent;
+import br.com.fiap.app.notificacaoService.service.NotificacaoService;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("NotificacaoListener Tests")
@@ -17,9 +19,12 @@ class NotificacaoListenerTest {
 
     private NotificacaoListener notificacaoListener;
 
+    @Mock
+    private NotificacaoService notificacaoService;
+
     @BeforeEach
     void setUp() {
-        notificacaoListener = new NotificacaoListener();
+        notificacaoListener = new NotificacaoListener(notificacaoService);
     }
 
     @Test
@@ -27,6 +32,7 @@ class NotificacaoListenerTest {
     void shouldProcessNotificationEventWithoutException() {
         ConsultaAgendadaEvent event = new ConsultaAgendadaEvent(
                 1L,
+                10L,
                 "Maria da Silva",
                 "Dr. João Santos",
                 LocalDateTime.now().plusDays(1),
@@ -52,6 +58,7 @@ class NotificacaoListenerTest {
     void shouldProcessNotificationWhenDataHoraIsInThePast() {
         ConsultaAgendadaEvent event = new ConsultaAgendadaEvent(
                 2L,
+                11L,
                 "Carlos Ferreira",
                 "Dra. Ana Lima",
                 LocalDateTime.now().minusDays(1),
@@ -68,6 +75,7 @@ class NotificacaoListenerTest {
     void shouldProcessCancelledConsultationEvent() {
         ConsultaAgendadaEvent event = new ConsultaAgendadaEvent(
                 3L,
+                12L,
                 "Pedro Souza",
                 "Dr. Ricardo Alves",
                 LocalDateTime.now().plusHours(2),

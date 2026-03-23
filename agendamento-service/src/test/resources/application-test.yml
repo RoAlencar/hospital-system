@@ -9,9 +9,14 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
-  h2:
-    console:
-      enabled: true
+    h2:
+      console:
+        enabled: true
+
+rabbitmq:
+  exchange: hospital.exchange
+  queue: consulta.agendada.queue
+  routing-key: consulta.agendada
 
 logging:
   level:

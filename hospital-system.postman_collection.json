@@ -1,0 +1,1318 @@
+{
+  "info": {
+    "name": "Tech Challenge Fase 3 - Hospital System",
+    "_postman_id": "tc-fase3-hospital-v1",
+    "description": "Full test collection for Tech Challenge Fase 3. Covers Spring Security (3 roles), GraphQL queries and mutations, and async messaging validation. Base URL and credentials are managed via collection variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url_agendamento",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "base_url_notificacoes",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "paciente_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "consulta_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "medico_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "username_medico",
+      "value": "medico@hospital.com",
+      "type": "string"
+    },
+    {
+      "key": "password_medico",
+      "value": "medico123",
+      "type": "string"
+    },
+    {
+      "key": "username_enfermeiro",
+      "value": "enfermeiro@hospital.com",
+      "type": "string"
+    },
+    {
+      "key": "password_enfermeiro",
+      "value": "enfermeiro123",
+      "type": "string"
+    },
+    {
+      "key": "username_paciente",
+      "value": "paciente@hospital.com",
+      "type": "string"
+    },
+    {
+      "key": "password_paciente",
+      "value": "paciente123",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 - SETUP (run once on fresh database)",
+      "description": "Creates the initial users required by all other requests. Run these in order on a fresh database before executing any other folder.",
+      "item": [
+        {
+          "name": "1. Bootstrap Admin (MEDICO)",
+          "description": "Creates the first user with ROLE_MEDICO via the open bootstrap endpoint. Only works when the users table is empty. Requires username, password, nome, email and role.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/users/bootstrap-admin",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "bootstrap-admin"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username_medico}}\",\n  \"password\": \"{{password_medico}}\",\n  \"nome\": \"Dr. Medico\",\n  \"email\": \"{{username_medico}}\",\n  \"telefone\": \"(11) 99999-0001\",\n  \"role\": \"ROLE_MEDICO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Register PACIENTE",
+          "description": "Registers a paciente user. /auth/register always assigns ROLE_PACIENTE automatically.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/auth/register",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username_paciente}}\",\n  \"password\": \"{{password_paciente}}\",\n  \"nome\": \"Paciente Teste\",\n  \"email\": \"{{username_paciente}}\",\n  \"telefone\": \"(11) 99999-0002\"\n}"
+            }
+          }
+        },
+        {
+          "name": "3. Login as MEDICO (Setup)",
+          "description": "Verifies that the MEDICO credentials are correct.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/auth/login",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username_medico}}\",\n  \"password\": \"{{password_medico}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Create ENFERMEIRO (via admin)",
+          "description": "Creates the enfermeiro user with ROLE_ENFERMEIRO via POST /api/users, which requires a MEDICO token. /auth/register cannot be used here because it always assigns ROLE_PACIENTE.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/users",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username_enfermeiro}}\",\n  \"password\": \"{{password_enfermeiro}}\",\n  \"nome\": \"Enfermeiro Teste\",\n  \"email\": \"{{username_enfermeiro}}\",\n  \"telefone\": \"(11) 99999-0003\",\n  \"role\": \"ROLE_ENFERMEIRO\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. Create MEDICO Profile",
+          "description": "Creates the medico profile in the medicos table. Must run after step 1. On a fresh database the medico user will have userId=1.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/medicos",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "medicos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"crm\": \"CRM-12345\",\n  \"especialidade\": \"CARDIOLOGIA\",\n  \"descricao\": \"Médico cardiologista\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "6. Create PACIENTE Profile",
+          "description": "Creates the paciente profile in the pacientes table. Must run after step 2. On a fresh database the paciente user will have userId=2.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/pacientes",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 2,\n  \"cpf\": \"11111111111\",\n  \"dataNascimento\": \"1990-01-01\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "7. Create ENFERMEIRO Profile",
+          "description": "Creates the enfermeiro profile in the enfermeiros table. Must run after step 4. On a fresh database the enfermeiro user will have userId=3.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/enfermeiros",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "enfermeiros"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 3,\n  \"coren\": \"COREN-67890\",\n  \"setor\": \"UTI\",\n  \"turno\": \"MANHA\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "Login as MEDICO",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/auth/login",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username_medico}}\",\n  \"password\": \"{{password_medico}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login as ENFERMEIRO",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/auth/login",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username_enfermeiro}}\",\n  \"password\": \"{{password_enfermeiro}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login as PACIENTE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/auth/login",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username_paciente}}\",\n  \"password\": \"{{password_paciente}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login without credentials - expect 401",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/auth/login",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"\",\n  \"password\": \"\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AGENDAMENTO - MEDICO",
+      "item": [
+        {
+          "name": "MEDICO - Create consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": {{paciente_id}},\n  \"medicoId\": {{medico_id}},\n  \"dataHora\": \"2026-08-15T10:00:00\",\n  \"motivo\": \"Consulta de rotina\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "MEDICO - Update consulta",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas/{{consulta_id}}",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{consulta_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHora\": \"2026-08-15T14:00:00\",\n  \"motivo\": \"Consulta de rotina - reagendada\",\n  \"status\": \"REAGENDADA\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "MEDICO - Get all consultas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas"
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "MEDICO - Get historico by paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas/paciente/{{paciente_id}}",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "paciente",
+                "{{paciente_id}}"
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AGENDAMENTO - ENFERMEIRO",
+      "item": [
+        {
+          "name": "ENFERMEIRO - Create consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": {{paciente_id}},\n  \"medicoId\": {{medico_id}},\n  \"dataHora\": \"2026-09-01T09:00:00\",\n  \"motivo\": \"Triagem de enfermagem\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_enfermeiro}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_enfermeiro}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "ENFERMEIRO - Get historico by paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas/paciente/{{paciente_id}}",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "paciente",
+                "{{paciente_id}}"
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_enfermeiro}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_enfermeiro}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AGENDAMENTO - PACIENTE",
+      "item": [
+        {
+          "name": "PACIENTE - Get own consultas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas/paciente/{{paciente_id}}",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "paciente",
+                "{{paciente_id}}"
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_paciente}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_paciente}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PACIENTE - Try to create consulta - expect 403",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": {{paciente_id}},\n  \"medicoId\": {{medico_id}},\n  \"dataHora\": \"2026-10-01T08:00:00\",\n  \"descricao\": \"Tentativa invalida\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_paciente}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_paciente}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PACIENTE - Try to access other patient consulta - expect 403",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas/paciente/999",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "paciente",
+                "999"
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_paciente}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_paciente}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PACIENTE - Try to edit consulta - expect 403",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas/{{consulta_id}}",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{consulta_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\": \"Tentativa de edicao por paciente\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_paciente}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_paciente}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SECURITY - Unauthenticated",
+      "item": [
+        {
+          "name": "No token - GET consultas - expect 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Invalid token - GET consultas - expect 401",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token_invalido_xyz"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/api/consultas",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GRAPHQL - MEDICO",
+      "item": [
+        {
+          "name": "GraphQL - Introspection (schema health check)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"{ __schema { types { name } } }\"\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GraphQL - Query all consultas by paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ConsultasByPaciente($pacienteId: ID!) {\\n  consultasByPaciente(pacienteId: $pacienteId) {\\n    id\\n    dataHora\\n    motivo\\n    status\\n  }\\n}\",\n  \"variables\": { \"pacienteId\": \"{{paciente_id}}\" }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GraphQL - Query consultas futuras",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ConsultasFuturasByPaciente($pacienteId: ID!) {\\n  consultasFuturasByPaciente(pacienteId: $pacienteId) {\\n    id\\n    dataHora\\n    motivo\\n  }\\n}\",\n  \"variables\": { \"pacienteId\": \"{{paciente_id}}\" }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GraphQL - Query consultas passadas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query HistoricoCompletoPaciente($pacienteId: ID!) {\\n  historicoCompletoPaciente(pacienteId: $pacienteId) {\\n    id\\n    dataHora\\n    motivo\\n    status\\n  }\\n}\",\n  \"variables\": { \"pacienteId\": \"{{paciente_id}}\" }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GraphQL - Mutation criar consulta (MEDICO)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation AgendarConsulta($input: ConsultaInput!) {\\n  agendarConsulta(input: $input) {\\n    id\\n    dataHora\\n    status\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-10-10T11:00:00\",\n      \"motivo\": \"Consulta via GraphQL mutation\"\n    }\n  }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GraphQL - Mutation editar consulta (MEDICO)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation AtualizarStatusConsulta($id: ID!, $status: StatusConsulta!) {\\n  atualizarStatusConsulta(id: $id, status: $status) {\\n    id\\n    dataHora\\n    status\\n  }\\n}\",\n  \"variables\": {\n    \"id\": \"{{consulta_id}}\",\n    \"status\": \"CONFIRMADA\"\n  }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GRAPHQL - ENFERMEIRO",
+      "item": [
+        {
+          "name": "GraphQL - Mutation criar consulta (ENFERMEIRO)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation AgendarConsulta($input: ConsultaInput!) {\\n  agendarConsulta(input: $input) {\\n    id\\n    dataHora\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-11-05T15:00:00\",\n      \"motivo\": \"Agendamento por enfermeiro\"\n    }\n  }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_enfermeiro}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_enfermeiro}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GRAPHQL - PACIENTE",
+      "item": [
+        {
+          "name": "GraphQL - PACIENTE Query own consultas",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ConsultasByPaciente($pacienteId: ID!) {\\n  consultasByPaciente(pacienteId: $pacienteId) {\\n    id\\n    dataHora\\n    motivo\\n    status\\n  }\\n}\",\n  \"variables\": { \"pacienteId\": \"{{paciente_id}}\" }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_paciente}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_paciente}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GraphQL - PACIENTE try mutation - expect error",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_agendamento}}/graphql",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation AgendarConsulta($input: ConsultaInput!) {\\n  agendarConsulta(input: $input) {\\n    id\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-12-01T10:00:00\",\n      \"motivo\": \"Tentativa proibida\"\n    }\n  }\n}"
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_paciente}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_paciente}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "NOTIFICACOES SERVICE",
+      "item": [
+        {
+          "name": "Notificacoes - Health check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_notificacoes}}/actuator/health",
+              "host": [
+                "{{base_url_notificacoes}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Notificacoes - Get notifications sent to paciente (MEDICO)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_notificacoes}}/notificacoes/paciente/{{paciente_id}}",
+              "host": [
+                "{{base_url_notificacoes}}"
+              ],
+              "path": [
+                "notificacoes",
+                "paciente",
+                "{{paciente_id}}"
+              ]
+            },
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username_medico}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_medico}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AGENDAMENTO - Health",
+      "item": [
+        {
+          "name": "Agendamento - Health check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url_agendamento}}/actuator/health",
+              "host": [
+                "{{base_url_agendamento}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

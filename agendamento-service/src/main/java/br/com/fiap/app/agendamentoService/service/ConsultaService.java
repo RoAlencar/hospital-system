@@ -4,10 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.fiap.app.agendamentoService.config.RabbitMQConfig;
+import br.com.fiap.app.agendamentoService.constants.EntityNames;
 import br.com.fiap.app.agendamentoService.dto.ConsultaAgendadaEvent;
 import br.com.fiap.app.agendamentoService.dto.ConsultaResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Consulta;
@@ -36,12 +37,18 @@ public class ConsultaService {
 
     private final RabbitTemplate rabbitTemplate;
 
+    @Value("${rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${rabbitmq.routing-key}")
+    private String routingKey;
+
     public Consulta createConsulta(Consulta request) {
         Medico medico = medicoRepository.findById(request.getMedicoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", request.getMedicoId()));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", request.getMedicoId()));
 
         Paciente paciente = pacienteRepository.findById(request.getPacienteId())
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", request.getPacienteId()));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", request.getPacienteId()));
 
         if (request.getDataHora().isBefore(LocalDateTime.now())) {
             throw new BusinessException("Data da consulta deve ser futura");
@@ -53,7 +60,7 @@ public class ConsultaService {
 
         if (request.getEnfermeiroId() != null) {
             Enfermeiro enfermeiro = enfermeiroRepository.findById(request.getEnfermeiroId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Enfermeiro", "ID", request.getEnfermeiroId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(EntityNames.ENFERMEIRO, "ID", request.getEnfermeiroId()));
             consulta.setEnfermeiro(enfermeiro);
         }
 
@@ -65,16 +72,7 @@ public class ConsultaService {
 
         Consulta savedConsulta = consultaRepository.save(consulta);
 
-        ConsultaAgendadaEvent event = ConsultaAgendadaEvent.builder()
-                .consultaId(savedConsulta.getId())
-                .pacienteNome(savedConsulta.getPaciente().getUser().getNome())
-                .medicoNome(savedConsulta.getMedico().getUser().getNome())
-                .dataHora(savedConsulta.getDataHora())
-                .status(savedConsulta.getStatus().name())
-                .motivo(savedConsulta.getMotivo())
-                .build();
-
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, event);
+        publishConsultaEvent(savedConsulta, savedConsulta.getMotivo());
 
         return savedConsulta;
     }
@@ -82,7 +80,7 @@ public class ConsultaService {
     @Transactional(readOnly = true)
     public Consulta getConsultaById(Long id) {
         return consultaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.CONSULTA, "ID", id));
     }
 
     @Transactional(readOnly = true)
@@ -93,14 +91,14 @@ public class ConsultaService {
     @Transactional(readOnly = true)
     public List<Consulta> getConsultasByMedico(Long medicoId) {
         Medico medico = medicoRepository.findById(medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", medicoId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", medicoId));
         return consultaRepository.findByMedico(medico);
     }
 
     @Transactional(readOnly = true)
     public List<Consulta> getConsultasByPaciente(Long pacienteId) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", pacienteId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", pacienteId));
         return consultaRepository.findByPaciente(paciente);
     }
 
@@ -117,7 +115,7 @@ public class ConsultaService {
     @Transactional(readOnly = true)
     public List<Consulta> getConsultasFuturasPorPaciente(Long pacienteId) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", pacienteId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", pacienteId));
         return consultaRepository.findConsultasFuturasPorPaciente(paciente, LocalDateTime.now());
     }
 
@@ -134,7 +132,7 @@ public class ConsultaService {
 
     public Consulta updateConsulta(Long id, Consulta request) {
         Consulta consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.CONSULTA, "ID", id));
 
         if (request.getDataHora() != null) {
             if (request.getDataHora().isBefore(LocalDateTime.now())) {
@@ -159,32 +157,43 @@ public class ConsultaService {
         }
 
         consulta.setDataAlteracao(LocalDateTime.now());
-        return consultaRepository.save(consulta);
+        Consulta updated = consultaRepository.save(consulta);
+
+        publishConsultaEvent(updated, updated.getMotivo());
+
+        return updated;
     }
 
     public Consulta updateStatusConsulta(Long id, StatusConsulta status) {
         Consulta consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.CONSULTA, "ID", id));
 
         consulta.setStatus(status);
         consulta.setDataAlteracao(LocalDateTime.now());
-        return consultaRepository.save(consulta);
+        Consulta updated = consultaRepository.save(consulta);
+
+        publishConsultaEvent(updated, updated.getMotivo());
+
+        return updated;
     }
 
     public void deleteConsulta(Long id) {
         Consulta consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.CONSULTA, "ID", id));
         consultaRepository.delete(consulta);
     }
 
     public void cancelarConsulta(Long id, String motivo) {
         Consulta consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Consulta", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.CONSULTA, "ID", id));
 
         consulta.setStatus(StatusConsulta.CANCELADA);
-        consulta.setObservacoes(consulta.getObservacoes() + "\n" + "CANCELAMENTO: " + motivo);
+        String observacoesAtuais = consulta.getObservacoes() != null ? consulta.getObservacoes() : "";
+        consulta.setObservacoes(observacoesAtuais + "\nCANCELAMENTO: " + motivo);
         consulta.setDataAlteracao(LocalDateTime.now());
-        consultaRepository.save(consulta);
+        Consulta cancelada = consultaRepository.save(consulta);
+
+        publishConsultaEvent(cancelada, motivo);
     }
 
     // DTO Methods for simplified responses
@@ -198,7 +207,7 @@ public class ConsultaService {
     @Transactional(readOnly = true)
     public List<ConsultaResponseDTO> getConsultasByMedicoDTO(Long medicoId) {
         Medico medico = medicoRepository.findById(medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", medicoId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", medicoId));
         return consultaRepository.findByMedico(medico).stream()
                 .map(ConsultaMapper::toDTO)
                 .toList();
@@ -207,7 +216,7 @@ public class ConsultaService {
     @Transactional(readOnly = true)
     public List<ConsultaResponseDTO> getConsultasByPacienteDTO(Long pacienteId) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", pacienteId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", pacienteId));
         return consultaRepository.findByPaciente(paciente).stream()
                 .map(ConsultaMapper::toDTO)
                 .toList();
@@ -230,7 +239,7 @@ public class ConsultaService {
     @Transactional(readOnly = true)
     public List<ConsultaResponseDTO> getConsultasFuturasPorPacienteDTO(Long pacienteId) {
         Paciente paciente = pacienteRepository.findById(pacienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente", "ID", pacienteId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.PACIENTE, "ID", pacienteId));
         return consultaRepository.findConsultasFuturasPorPaciente(paciente, LocalDateTime.now()).stream()
                 .map(ConsultaMapper::toDTO)
                 .toList();
@@ -241,5 +250,18 @@ public class ConsultaService {
         return consultaRepository.findHistoricoCompletoPaciente(pacienteId).stream()
                 .map(ConsultaMapper::toDTO)
                 .toList();
+    }
+
+    private void publishConsultaEvent(Consulta consulta, String motivo) {
+        ConsultaAgendadaEvent event = ConsultaAgendadaEvent.builder()
+                .consultaId(consulta.getId())
+                .pacienteId(consulta.getPaciente().getId())
+                .pacienteNome(consulta.getPaciente().getUser().getNome())
+                .medicoNome(consulta.getMedico().getUser().getNome())
+                .dataHora(consulta.getDataHora())
+                .status(consulta.getStatus().name())
+                .motivo(motivo)
+                .build();
+        rabbitTemplate.convertAndSend(exchange, routingKey, event);
     }
 }

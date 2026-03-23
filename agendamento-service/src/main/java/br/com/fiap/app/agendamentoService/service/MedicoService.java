@@ -1,5 +1,11 @@
 package br.com.fiap.app.agendamentoService.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.fiap.app.agendamentoService.constants.EntityNames;
 import br.com.fiap.app.agendamentoService.entity.Medico;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.enums.Especialidade;
@@ -8,10 +14,6 @@ import br.com.fiap.app.agendamentoService.exception.ResourceNotFoundException;
 import br.com.fiap.app.agendamentoService.repository.MedicoRepository;
 import br.com.fiap.app.agendamentoService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class MedicoService {
         }
 
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário", "ID", request.getUserId()));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.USUARIO, "ID", request.getUserId()));
 
         request.setUser(user);
         request.setAtivo(true);
@@ -37,19 +39,19 @@ public class MedicoService {
     @Transactional(readOnly = true)
     public Medico getMedicoById(Long id) {
         return medicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", id));
     }
 
     @Transactional(readOnly = true)
     public Medico getMedicoByCrm(String crm) {
         return medicoRepository.findByCrm(crm)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "CRM", crm));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "CRM", crm));
     }
 
     @Transactional(readOnly = true)
     public Medico getMedicoByUserId(Long userId) {
         return medicoRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "User ID", userId));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "User ID", userId));
     }
 
     @Transactional(readOnly = true)
@@ -74,7 +76,7 @@ public class MedicoService {
 
     public Medico updateMedico(Long id, Medico request) {
         Medico medico = medicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", id));
 
         if (request.getCrm() != null) {
             if (!medico.getCrm().equals(request.getCrm()) && medicoRepository.existsByCrm(request.getCrm())) {
@@ -97,20 +99,20 @@ public class MedicoService {
 
     public void deleteMedico(Long id) {
         Medico medico = medicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", id));
         medicoRepository.delete(medico);
     }
 
     public void deactivateMedico(Long id) {
         Medico medico = medicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", id));
         medico.setAtivo(false);
         medicoRepository.save(medico);
     }
 
     public void activateMedico(Long id) {
         Medico medico = medicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Médico", "ID", id));
+                .orElseThrow(() -> new ResourceNotFoundException(EntityNames.MEDICO, "ID", id));
         medico.setAtivo(true);
         medicoRepository.save(medico);
     }

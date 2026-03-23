@@ -19,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import br.com.fiap.app.agendamentoService.dto.UserInfoResponse;
+import br.com.fiap.app.agendamentoService.dto.UserRequestDTO;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.enums.Role;
 import br.com.fiap.app.agendamentoService.service.UserService;
@@ -34,6 +36,8 @@ class UserControllerTest {
     private UserController userController;
 
     private User user;
+    private UserRequestDTO userRequest;
+    private UserInfoResponse userResponse;
 
     @BeforeEach
     void setUp() {
@@ -46,6 +50,14 @@ class UserControllerTest {
         user.setTelefone("11999999999");
         user.setRole(Role.ROLE_MEDICO);
         user.setActive(true);
+
+        userRequest = new UserRequestDTO(
+                "testuser", "password123", "Test User",
+                "test@example.com", "11999999999", Role.ROLE_MEDICO);
+
+        userResponse = new UserInfoResponse(
+                1L, "testuser", "Test User",
+                "test@example.com", "11999999999", Role.ROLE_MEDICO, true);
     }
 
     @Test
@@ -53,10 +65,10 @@ class UserControllerTest {
     void shouldCreateUserAndReturn201() {
         when(userService.createUser(any(User.class))).thenReturn(user);
 
-        ResponseEntity<User> response = userController.createUser(user);
+        ResponseEntity<UserInfoResponse> response = userController.createUser(userRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(user);
+        assertThat(response.getBody()).isEqualTo(userResponse);
         verify(userService).createUser(any(User.class));
     }
 
@@ -65,10 +77,10 @@ class UserControllerTest {
     void shouldCreateBootstrapAdminAndReturn201() {
         when(userService.createBootstrapAdmin(any(User.class))).thenReturn(user);
 
-        ResponseEntity<User> response = userController.createBootstrapAdmin(user);
+        ResponseEntity<UserInfoResponse> response = userController.createBootstrapAdmin(userRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(user);
+        assertThat(response.getBody()).isEqualTo(userResponse);
         verify(userService).createBootstrapAdmin(any(User.class));
     }
 
@@ -77,10 +89,10 @@ class UserControllerTest {
     void shouldGetUserByIdAndReturn200() {
         when(userService.getUserById(1L)).thenReturn(user);
 
-        ResponseEntity<User> response = userController.getUserById(1L);
+        ResponseEntity<UserInfoResponse> response = userController.getUserById(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(user);
+        assertThat(response.getBody()).isEqualTo(userResponse);
         verify(userService).getUserById(1L);
     }
 
@@ -89,10 +101,10 @@ class UserControllerTest {
     void shouldGetUserByUsernameAndReturn200() {
         when(userService.getUserByUsername("testuser")).thenReturn(user);
 
-        ResponseEntity<User> response = userController.getUserByUsername("testuser");
+        ResponseEntity<UserInfoResponse> response = userController.getUserByUsername("testuser");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(user);
+        assertThat(response.getBody()).isEqualTo(userResponse);
         verify(userService).getUserByUsername("testuser");
     }
 
@@ -102,7 +114,7 @@ class UserControllerTest {
         List<User> users = Arrays.asList(user);
         when(userService.getAllUsers()).thenReturn(users);
 
-        ResponseEntity<List<User>> response = userController.getAllUsers();
+        ResponseEntity<List<UserInfoResponse>> response = userController.getAllUsers();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -115,7 +127,7 @@ class UserControllerTest {
         List<User> users = Arrays.asList(user);
         when(userService.getUsersByRole(Role.ROLE_MEDICO)).thenReturn(users);
 
-        ResponseEntity<List<User>> response = userController.getUsersByRole(Role.ROLE_MEDICO);
+        ResponseEntity<List<UserInfoResponse>> response = userController.getUsersByRole(Role.ROLE_MEDICO);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -128,7 +140,7 @@ class UserControllerTest {
         List<User> users = Arrays.asList(user);
         when(userService.getActiveUsers()).thenReturn(users);
 
-        ResponseEntity<List<User>> response = userController.getActiveUsers();
+        ResponseEntity<List<UserInfoResponse>> response = userController.getActiveUsers();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -138,12 +150,13 @@ class UserControllerTest {
     @Test
     @DisplayName("Should update user and return 200")
     void shouldUpdateUserAndReturn200() {
+        when(userService.getUserById(1L)).thenReturn(user);
         when(userService.updateUser(eq(1L), any(User.class))).thenReturn(user);
 
-        ResponseEntity<User> response = userController.updateUser(1L, user);
+        ResponseEntity<UserInfoResponse> response = userController.updateUser(1L, userRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(user);
+        assertThat(response.getBody()).isEqualTo(userResponse);
         verify(userService).updateUser(eq(1L), any(User.class));
     }
 

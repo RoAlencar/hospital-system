@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiap.app.agendamentoService.dto.ConsultaRequestDTO;
 import br.com.fiap.app.agendamentoService.dto.ConsultaResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Consulta;
 import br.com.fiap.app.agendamentoService.enums.StatusConsulta;
+import br.com.fiap.app.agendamentoService.mapper.ConsultaMapper;
 import br.com.fiap.app.agendamentoService.service.ConsultaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +35,15 @@ public class ConsultaController {
     
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Consulta> createConsulta(@Valid @RequestBody Consulta request) {
-        Consulta consulta = consultaService.createConsulta(request);
-        return new ResponseEntity<>(consulta, HttpStatus.CREATED);
+    public ResponseEntity<ConsultaResponseDTO> createConsulta(@Valid @RequestBody ConsultaRequestDTO request) {
+        Consulta consulta = consultaService.createConsulta(ConsultaMapper.fromDTO(request));
+        return new ResponseEntity<>(ConsultaMapper.toDTO(consulta), HttpStatus.CREATED);
     }
     
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
-    public ResponseEntity<Consulta> getConsultaById(@PathVariable Long id) {
-        return ResponseEntity.ok(consultaService.getConsultaById(id));
+    public ResponseEntity<ConsultaResponseDTO> getConsultaById(@PathVariable Long id) {
+        return ResponseEntity.ok(ConsultaMapper.toDTO(consultaService.getConsultaById(id)));
     }
     
     @GetMapping
@@ -57,19 +59,19 @@ public class ConsultaController {
     }
     
     @GetMapping("/paciente/{pacienteId}")
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and #pacienteId == authentication.principal.id)")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @pacienteService.isOwnedByUser(#pacienteId, authentication.principal.id))")
     public ResponseEntity<List<ConsultaResponseDTO>> getConsultasByPaciente(@PathVariable Long pacienteId) {
         return ResponseEntity.ok(consultaService.getConsultasByPacienteDTO(pacienteId));
     }
     
     @GetMapping("/paciente/{pacienteId}/futuras")
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and #pacienteId == authentication.principal.id)")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @pacienteService.isOwnedByUser(#pacienteId, authentication.principal.id))")
     public ResponseEntity<List<ConsultaResponseDTO>> getConsultasFuturasPorPaciente(@PathVariable Long pacienteId) {
         return ResponseEntity.ok(consultaService.getConsultasFuturasPorPacienteDTO(pacienteId));
     }
     
     @GetMapping("/paciente/{pacienteId}/historico")
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and #pacienteId == authentication.principal.id)")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @pacienteService.isOwnedByUser(#pacienteId, authentication.principal.id))")
     public ResponseEntity<List<ConsultaResponseDTO>> getHistoricoCompletoPaciente(@PathVariable Long pacienteId) {
         return ResponseEntity.ok(consultaService.getHistoricoCompletoPacienteDTO(pacienteId));
     }
@@ -90,20 +92,23 @@ public class ConsultaController {
     
     @GetMapping("/notificacoes")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Consulta>> getConsultasParaNotificacao() {
-        return ResponseEntity.ok(consultaService.getConsultasParaNotificacao());
+    public ResponseEntity<List<ConsultaResponseDTO>> getConsultasParaNotificacao() {
+        List<ConsultaResponseDTO> result = consultaService.getConsultasParaNotificacao().stream()
+                .map(ConsultaMapper::toDTO)
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(result);
     }
     
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Consulta> updateConsulta(@PathVariable Long id, @RequestBody Consulta request) {
-        return ResponseEntity.ok(consultaService.updateConsulta(id, request));
+    public ResponseEntity<ConsultaResponseDTO> updateConsulta(@PathVariable Long id, @RequestBody ConsultaRequestDTO request) {
+        return ResponseEntity.ok(ConsultaMapper.toDTO(consultaService.updateConsulta(id, ConsultaMapper.fromDTO(request))));
     }
     
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Consulta> updateStatusConsulta(@PathVariable Long id, @RequestParam StatusConsulta status) {
-        return ResponseEntity.ok(consultaService.updateStatusConsulta(id, status));
+    public ResponseEntity<ConsultaResponseDTO> updateStatusConsulta(@PathVariable Long id, @RequestParam StatusConsulta status) {
+        return ResponseEntity.ok(ConsultaMapper.toDTO(consultaService.updateStatusConsulta(id, status)));
     }
     
     @PutMapping("/{id}/cancelar")

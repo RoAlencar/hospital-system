@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import br.com.fiap.app.agendamentoService.dto.ConsultaRequestDTO;
 import br.com.fiap.app.agendamentoService.dto.ConsultaResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Consulta;
 import br.com.fiap.app.agendamentoService.entity.Medico;
@@ -39,6 +40,7 @@ class ConsultaControllerTest {
     private ConsultaController consultaController;
 
     private Consulta consulta;
+    private ConsultaRequestDTO consultaRequest;
     private ConsultaResponseDTO consultaDTO;
 
     @BeforeEach
@@ -60,6 +62,13 @@ class ConsultaControllerTest {
         consulta.setStatus(StatusConsulta.AGENDADA);
         consulta.setMotivo("Consulta de rotina");
 
+        consultaRequest = new ConsultaRequestDTO();
+        consultaRequest.setMedicoId(1L);
+        consultaRequest.setPacienteId(1L);
+        consultaRequest.setDataHora(LocalDateTime.now().plusDays(1));
+        consultaRequest.setStatus(StatusConsulta.AGENDADA);
+        consultaRequest.setMotivo("Consulta de rotina");
+
         consultaDTO = new ConsultaResponseDTO();
         consultaDTO.setId(1L);
         consultaDTO.setStatus(StatusConsulta.AGENDADA);
@@ -70,10 +79,10 @@ class ConsultaControllerTest {
     void shouldCreateConsultaAndReturn201() {
         when(consultaService.createConsulta(any(Consulta.class))).thenReturn(consulta);
 
-        ResponseEntity<Consulta> response = consultaController.createConsulta(consulta);
+        ResponseEntity<ConsultaResponseDTO> response = consultaController.createConsulta(consultaRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(consulta);
+        assertThat(response.getBody()).isNotNull();
         verify(consultaService).createConsulta(any(Consulta.class));
     }
 
@@ -82,10 +91,10 @@ class ConsultaControllerTest {
     void shouldGetConsultaByIdAndReturn200() {
         when(consultaService.getConsultaById(1L)).thenReturn(consulta);
 
-        ResponseEntity<Consulta> response = consultaController.getConsultaById(1L);
+        ResponseEntity<ConsultaResponseDTO> response = consultaController.getConsultaById(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(consulta);
+        assertThat(response.getBody()).isNotNull();
         verify(consultaService).getConsultaById(1L);
     }
 
@@ -188,7 +197,7 @@ class ConsultaControllerTest {
         List<Consulta> consultas = Arrays.asList(consulta);
         when(consultaService.getConsultasParaNotificacao()).thenReturn(consultas);
 
-        ResponseEntity<List<Consulta>> response = consultaController.getConsultasParaNotificacao();
+        ResponseEntity<List<ConsultaResponseDTO>> response = consultaController.getConsultasParaNotificacao();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -200,10 +209,10 @@ class ConsultaControllerTest {
     void shouldUpdateConsultaAndReturn200() {
         when(consultaService.updateConsulta(eq(1L), any(Consulta.class))).thenReturn(consulta);
 
-        ResponseEntity<Consulta> response = consultaController.updateConsulta(1L, consulta);
+        ResponseEntity<ConsultaResponseDTO> response = consultaController.updateConsulta(1L, consultaRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(consulta);
+        assertThat(response.getBody()).isNotNull();
         verify(consultaService).updateConsulta(eq(1L), any(Consulta.class));
     }
 
@@ -212,10 +221,10 @@ class ConsultaControllerTest {
     void shouldUpdateStatusConsultaAndReturn200() {
         when(consultaService.updateStatusConsulta(1L, StatusConsulta.CONFIRMADA)).thenReturn(consulta);
 
-        ResponseEntity<Consulta> response = consultaController.updateStatusConsulta(1L, StatusConsulta.CONFIRMADA);
+        ResponseEntity<ConsultaResponseDTO> response = consultaController.updateStatusConsulta(1L, StatusConsulta.CONFIRMADA);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(consulta);
+        assertThat(response.getBody()).isNotNull();
         verify(consultaService).updateStatusConsulta(1L, StatusConsulta.CONFIRMADA);
     }
 

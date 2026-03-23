@@ -1,6 +1,9 @@
 package br.com.fiap.app.agendamentoService.controller;
 
+import br.com.fiap.app.agendamentoService.dto.EnfermeiroRequestDTO;
+import br.com.fiap.app.agendamentoService.dto.EnfermeiroResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Enfermeiro;
+import br.com.fiap.app.agendamentoService.mapper.EnfermeiroMapper;
 import br.com.fiap.app.agendamentoService.service.EnfermeiroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/enfermeiros")
@@ -20,76 +24,99 @@ public class EnfermeiroController {
     
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Enfermeiro> createEnfermeiro(@Valid @RequestBody Enfermeiro request) {
-        Enfermeiro enfermeiro = enfermeiroService.createEnfermeiro(request);
-        return new ResponseEntity<>(enfermeiro, HttpStatus.CREATED);
+    public ResponseEntity<EnfermeiroResponseDTO> createEnfermeiro(@Valid @RequestBody EnfermeiroRequestDTO request) {
+        Enfermeiro enfermeiro = enfermeiroService.createEnfermeiro(EnfermeiroMapper.fromDTO(request));
+        return new ResponseEntity<>(EnfermeiroMapper.toDTO(enfermeiro), HttpStatus.CREATED);
     }
-    
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Enfermeiro> getEnfermeiroById(@PathVariable Long id) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeiroById(id));
+    public ResponseEntity<EnfermeiroResponseDTO> getEnfermeiroById(@PathVariable Long id) {
+        return ResponseEntity.ok(EnfermeiroMapper.toDTO(enfermeiroService.getEnfermeiroById(id)));
     }
-    
+
     @GetMapping("/coren/{coren}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Enfermeiro> getEnfermeiroByCoren(@PathVariable String coren) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeiroByCoren(coren));
+    public ResponseEntity<EnfermeiroResponseDTO> getEnfermeiroByCoren(@PathVariable String coren) {
+        return ResponseEntity.ok(EnfermeiroMapper.toDTO(enfermeiroService.getEnfermeiroByCoren(coren)));
     }
-    
+
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Enfermeiro> getEnfermeiroByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeiroByUserId(userId));
+    public ResponseEntity<EnfermeiroResponseDTO> getEnfermeiroByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(EnfermeiroMapper.toDTO(enfermeiroService.getEnfermeiroByUserId(userId)));
     }
-    
+
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Enfermeiro>> getAllEnfermeiros() {
-        return ResponseEntity.ok(enfermeiroService.getAllEnfermeiros());
+    public ResponseEntity<List<EnfermeiroResponseDTO>> getAllEnfermeiros() {
+        List<EnfermeiroResponseDTO> result = enfermeiroService.getAllEnfermeiros().stream()
+                .map(EnfermeiroMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
-    
+
     @GetMapping("/setor/{setor}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Enfermeiro>> getEnfermeirosBySetor(@PathVariable String setor) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeirosBySetor(setor));
+    public ResponseEntity<List<EnfermeiroResponseDTO>> getEnfermeirosBySetor(@PathVariable String setor) {
+        List<EnfermeiroResponseDTO> result = enfermeiroService.getEnfermeirosBySetor(setor).stream()
+                .map(EnfermeiroMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
-    
+
     @GetMapping("/turno/{turno}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Enfermeiro>> getEnfermeirosByTurno(@PathVariable String turno) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeirosByTurno(turno));
+    public ResponseEntity<List<EnfermeiroResponseDTO>> getEnfermeirosByTurno(@PathVariable String turno) {
+        List<EnfermeiroResponseDTO> result = enfermeiroService.getEnfermeirosByTurno(turno).stream()
+                .map(EnfermeiroMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
-    
+
     @GetMapping("/setor/{setor}/turno/{turno}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Enfermeiro>> getEnfermeirosBySetorAndTurno(
+    public ResponseEntity<List<EnfermeiroResponseDTO>> getEnfermeirosBySetorAndTurno(
             @PathVariable String setor, @PathVariable String turno) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeirosBySetorAndTurno(setor, turno));
+        List<EnfermeiroResponseDTO> result = enfermeiroService.getEnfermeirosBySetorAndTurno(setor, turno).stream()
+                .map(EnfermeiroMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
-    
+
     @GetMapping("/especializacao/{especializacao}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Enfermeiro>> getEnfermeirosByEspecializacao(@PathVariable String especializacao) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeirosByEspecializacao(especializacao));
+    public ResponseEntity<List<EnfermeiroResponseDTO>> getEnfermeirosByEspecializacao(@PathVariable String especializacao) {
+        List<EnfermeiroResponseDTO> result = enfermeiroService.getEnfermeirosByEspecializacao(especializacao).stream()
+                .map(EnfermeiroMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
-    
+
     @GetMapping("/active")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Enfermeiro>> getActiveEnfermeiros() {
-        return ResponseEntity.ok(enfermeiroService.getActiveEnfermeiros());
+    public ResponseEntity<List<EnfermeiroResponseDTO>> getActiveEnfermeiros() {
+        List<EnfermeiroResponseDTO> result = enfermeiroService.getActiveEnfermeiros().stream()
+                .map(EnfermeiroMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
-    
+
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<List<Enfermeiro>> searchEnfermeirosByNome(@RequestParam String nome) {
-        return ResponseEntity.ok(enfermeiroService.getEnfermeirosByNome(nome));
+    public ResponseEntity<List<EnfermeiroResponseDTO>> searchEnfermeirosByNome(@RequestParam String nome) {
+        List<EnfermeiroResponseDTO> result = enfermeiroService.getEnfermeirosByNome(nome).stream()
+                .map(EnfermeiroMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
-    
+
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public ResponseEntity<Enfermeiro> updateEnfermeiro(@PathVariable Long id, @RequestBody Enfermeiro request) {
-        return ResponseEntity.ok(enfermeiroService.updateEnfermeiro(id, request));
+    public ResponseEntity<EnfermeiroResponseDTO> updateEnfermeiro(@PathVariable Long id, @RequestBody EnfermeiroRequestDTO request) {
+        Enfermeiro existing = enfermeiroService.getEnfermeiroById(id);
+        EnfermeiroMapper.updateFromDTO(existing, request);
+        return ResponseEntity.ok(EnfermeiroMapper.toDTO(enfermeiroService.updateEnfermeiro(id, existing)));
     }
     
     @PutMapping("/{id}/deactivate")

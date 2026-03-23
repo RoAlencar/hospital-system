@@ -1,5 +1,7 @@
 package br.com.fiap.app.agendamentoService.controller;
 
+import br.com.fiap.app.agendamentoService.dto.EnfermeiroRequestDTO;
+import br.com.fiap.app.agendamentoService.dto.EnfermeiroResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Enfermeiro;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.enums.Role;
@@ -34,6 +36,8 @@ class EnfermeiroControllerTest {
 
     private Enfermeiro enfermeiro;
     private User user;
+    private EnfermeiroRequestDTO enfermeiroRequest;
+    private EnfermeiroResponseDTO enfermeiroResponse;
 
     @BeforeEach
     void setUp() {
@@ -54,6 +58,17 @@ class EnfermeiroControllerTest {
         enfermeiro.setEspecializacao("Terapia Intensiva");
         enfermeiro.setAtivo(true);
         enfermeiro.setUser(user);
+
+        enfermeiroRequest = new EnfermeiroRequestDTO();
+        enfermeiroRequest.setUserId(1L);
+        enfermeiroRequest.setCoren("COREN-SP-123456");
+        enfermeiroRequest.setSetor("UTI");
+        enfermeiroRequest.setTurno("MANHA");
+        enfermeiroRequest.setEspecializacao("Terapia Intensiva");
+
+        enfermeiroResponse = new EnfermeiroResponseDTO(
+                1L, "Ana Costa", "ana@hospital.com", null,
+                "COREN-SP-123456", "UTI", "MANHA", "Terapia Intensiva", null, true);
     }
 
     @Test
@@ -61,10 +76,10 @@ class EnfermeiroControllerTest {
     void shouldCreateEnfermeiroAndReturn201() {
         when(enfermeiroService.createEnfermeiro(any(Enfermeiro.class))).thenReturn(enfermeiro);
 
-        ResponseEntity<Enfermeiro> response = enfermeiroController.createEnfermeiro(enfermeiro);
+        ResponseEntity<EnfermeiroResponseDTO> response = enfermeiroController.createEnfermeiro(enfermeiroRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(enfermeiro);
+        assertThat(response.getBody()).isEqualTo(enfermeiroResponse);
         verify(enfermeiroService).createEnfermeiro(any(Enfermeiro.class));
     }
 
@@ -73,10 +88,10 @@ class EnfermeiroControllerTest {
     void shouldGetEnfermeiroByIdAndReturn200() {
         when(enfermeiroService.getEnfermeiroById(1L)).thenReturn(enfermeiro);
 
-        ResponseEntity<Enfermeiro> response = enfermeiroController.getEnfermeiroById(1L);
+        ResponseEntity<EnfermeiroResponseDTO> response = enfermeiroController.getEnfermeiroById(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(enfermeiro);
+        assertThat(response.getBody()).isEqualTo(enfermeiroResponse);
         verify(enfermeiroService).getEnfermeiroById(1L);
     }
 
@@ -85,10 +100,10 @@ class EnfermeiroControllerTest {
     void shouldGetEnfermeiroByCorenAndReturn200() {
         when(enfermeiroService.getEnfermeiroByCoren("COREN-SP-123456")).thenReturn(enfermeiro);
 
-        ResponseEntity<Enfermeiro> response = enfermeiroController.getEnfermeiroByCoren("COREN-SP-123456");
+        ResponseEntity<EnfermeiroResponseDTO> response = enfermeiroController.getEnfermeiroByCoren("COREN-SP-123456");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(enfermeiro);
+        assertThat(response.getBody()).isEqualTo(enfermeiroResponse);
         verify(enfermeiroService).getEnfermeiroByCoren("COREN-SP-123456");
     }
 
@@ -97,10 +112,10 @@ class EnfermeiroControllerTest {
     void shouldGetEnfermeiroByUserIdAndReturn200() {
         when(enfermeiroService.getEnfermeiroByUserId(1L)).thenReturn(enfermeiro);
 
-        ResponseEntity<Enfermeiro> response = enfermeiroController.getEnfermeiroByUserId(1L);
+        ResponseEntity<EnfermeiroResponseDTO> response = enfermeiroController.getEnfermeiroByUserId(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(enfermeiro);
+        assertThat(response.getBody()).isEqualTo(enfermeiroResponse);
         verify(enfermeiroService).getEnfermeiroByUserId(1L);
     }
 
@@ -110,7 +125,7 @@ class EnfermeiroControllerTest {
         List<Enfermeiro> enfermeiros = Arrays.asList(enfermeiro);
         when(enfermeiroService.getAllEnfermeiros()).thenReturn(enfermeiros);
 
-        ResponseEntity<List<Enfermeiro>> response = enfermeiroController.getAllEnfermeiros();
+        ResponseEntity<List<EnfermeiroResponseDTO>> response = enfermeiroController.getAllEnfermeiros();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -123,7 +138,7 @@ class EnfermeiroControllerTest {
         List<Enfermeiro> enfermeiros = Arrays.asList(enfermeiro);
         when(enfermeiroService.getEnfermeirosBySetor("UTI")).thenReturn(enfermeiros);
 
-        ResponseEntity<List<Enfermeiro>> response = enfermeiroController.getEnfermeirosBySetor("UTI");
+        ResponseEntity<List<EnfermeiroResponseDTO>> response = enfermeiroController.getEnfermeirosBySetor("UTI");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -136,7 +151,7 @@ class EnfermeiroControllerTest {
         List<Enfermeiro> enfermeiros = Arrays.asList(enfermeiro);
         when(enfermeiroService.getEnfermeirosByTurno("MANHA")).thenReturn(enfermeiros);
 
-        ResponseEntity<List<Enfermeiro>> response = enfermeiroController.getEnfermeirosByTurno("MANHA");
+        ResponseEntity<List<EnfermeiroResponseDTO>> response = enfermeiroController.getEnfermeirosByTurno("MANHA");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -149,7 +164,7 @@ class EnfermeiroControllerTest {
         List<Enfermeiro> enfermeiros = Arrays.asList(enfermeiro);
         when(enfermeiroService.getEnfermeirosBySetorAndTurno("UTI", "MANHA")).thenReturn(enfermeiros);
 
-        ResponseEntity<List<Enfermeiro>> response = enfermeiroController.getEnfermeirosBySetorAndTurno("UTI", "MANHA");
+        ResponseEntity<List<EnfermeiroResponseDTO>> response = enfermeiroController.getEnfermeirosBySetorAndTurno("UTI", "MANHA");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -162,7 +177,7 @@ class EnfermeiroControllerTest {
         List<Enfermeiro> enfermeiros = Arrays.asList(enfermeiro);
         when(enfermeiroService.getEnfermeirosByEspecializacao("Terapia Intensiva")).thenReturn(enfermeiros);
 
-        ResponseEntity<List<Enfermeiro>> response = enfermeiroController.getEnfermeirosByEspecializacao("Terapia Intensiva");
+        ResponseEntity<List<EnfermeiroResponseDTO>> response = enfermeiroController.getEnfermeirosByEspecializacao("Terapia Intensiva");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -175,7 +190,7 @@ class EnfermeiroControllerTest {
         List<Enfermeiro> enfermeiros = Arrays.asList(enfermeiro);
         when(enfermeiroService.getActiveEnfermeiros()).thenReturn(enfermeiros);
 
-        ResponseEntity<List<Enfermeiro>> response = enfermeiroController.getActiveEnfermeiros();
+        ResponseEntity<List<EnfermeiroResponseDTO>> response = enfermeiroController.getActiveEnfermeiros();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -188,7 +203,7 @@ class EnfermeiroControllerTest {
         List<Enfermeiro> enfermeiros = Arrays.asList(enfermeiro);
         when(enfermeiroService.getEnfermeirosByNome("Ana")).thenReturn(enfermeiros);
 
-        ResponseEntity<List<Enfermeiro>> response = enfermeiroController.searchEnfermeirosByNome("Ana");
+        ResponseEntity<List<EnfermeiroResponseDTO>> response = enfermeiroController.searchEnfermeirosByNome("Ana");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -198,12 +213,13 @@ class EnfermeiroControllerTest {
     @Test
     @DisplayName("Should update enfermeiro and return 200")
     void shouldUpdateEnfermeiroAndReturn200() {
+        when(enfermeiroService.getEnfermeiroById(1L)).thenReturn(enfermeiro);
         when(enfermeiroService.updateEnfermeiro(eq(1L), any(Enfermeiro.class))).thenReturn(enfermeiro);
 
-        ResponseEntity<Enfermeiro> response = enfermeiroController.updateEnfermeiro(1L, enfermeiro);
+        ResponseEntity<EnfermeiroResponseDTO> response = enfermeiroController.updateEnfermeiro(1L, enfermeiroRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(enfermeiro);
+        assertThat(response.getBody()).isEqualTo(enfermeiroResponse);
         verify(enfermeiroService).updateEnfermeiro(eq(1L), any(Enfermeiro.class));
     }
 

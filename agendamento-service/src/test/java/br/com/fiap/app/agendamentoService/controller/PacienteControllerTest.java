@@ -1,5 +1,7 @@
 package br.com.fiap.app.agendamentoService.controller;
 
+import br.com.fiap.app.agendamentoService.dto.PacienteRequestDTO;
+import br.com.fiap.app.agendamentoService.dto.PacienteResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Paciente;
 import br.com.fiap.app.agendamentoService.entity.User;
 import br.com.fiap.app.agendamentoService.enums.Role;
@@ -35,6 +37,8 @@ class PacienteControllerTest {
 
     private Paciente paciente;
     private User user;
+    private PacienteRequestDTO pacienteRequest;
+    private PacienteResponseDTO pacienteResponse;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +57,16 @@ class PacienteControllerTest {
         paciente.setDataNascimento(LocalDate.of(1990, 5, 15));
         paciente.setAtivo(true);
         paciente.setUser(user);
+
+        pacienteRequest = new PacienteRequestDTO();
+        pacienteRequest.setUserId(1L);
+        pacienteRequest.setCpf("12345678901");
+        pacienteRequest.setDataNascimento(LocalDate.of(1990, 5, 15));
+
+        pacienteResponse = new PacienteResponseDTO(
+                1L, "Maria da Silva", "maria@email.com", null,
+                "12345678901", LocalDate.of(1990, 5, 15),
+                null, null, null, null, null, true);
     }
 
     @Test
@@ -60,10 +74,10 @@ class PacienteControllerTest {
     void shouldCreatePacienteAndReturn201() {
         when(pacienteService.createPaciente(any(Paciente.class))).thenReturn(paciente);
 
-        ResponseEntity<Paciente> response = pacienteController.createPaciente(paciente);
+        ResponseEntity<PacienteResponseDTO> response = pacienteController.createPaciente(pacienteRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isEqualTo(paciente);
+        assertThat(response.getBody()).isEqualTo(pacienteResponse);
         verify(pacienteService).createPaciente(any(Paciente.class));
     }
 
@@ -72,10 +86,10 @@ class PacienteControllerTest {
     void shouldGetPacienteByIdAndReturn200() {
         when(pacienteService.getPacienteById(1L)).thenReturn(paciente);
 
-        ResponseEntity<Paciente> response = pacienteController.getPacienteById(1L);
+        ResponseEntity<PacienteResponseDTO> response = pacienteController.getPacienteById(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(paciente);
+        assertThat(response.getBody()).isEqualTo(pacienteResponse);
         verify(pacienteService).getPacienteById(1L);
     }
 
@@ -84,10 +98,10 @@ class PacienteControllerTest {
     void shouldGetPacienteByCpfAndReturn200() {
         when(pacienteService.getPacienteByCpf("12345678901")).thenReturn(paciente);
 
-        ResponseEntity<Paciente> response = pacienteController.getPacienteByCpf("12345678901");
+        ResponseEntity<PacienteResponseDTO> response = pacienteController.getPacienteByCpf("12345678901");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(paciente);
+        assertThat(response.getBody()).isEqualTo(pacienteResponse);
         verify(pacienteService).getPacienteByCpf("12345678901");
     }
 
@@ -96,10 +110,10 @@ class PacienteControllerTest {
     void shouldGetPacienteByUserIdAndReturn200() {
         when(pacienteService.getPacienteByUserId(1L)).thenReturn(paciente);
 
-        ResponseEntity<Paciente> response = pacienteController.getPacienteByUserId(1L);
+        ResponseEntity<PacienteResponseDTO> response = pacienteController.getPacienteByUserId(1L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(paciente);
+        assertThat(response.getBody()).isEqualTo(pacienteResponse);
         verify(pacienteService).getPacienteByUserId(1L);
     }
 
@@ -109,7 +123,7 @@ class PacienteControllerTest {
         List<Paciente> pacientes = Arrays.asList(paciente);
         when(pacienteService.getAllPacientes()).thenReturn(pacientes);
 
-        ResponseEntity<List<Paciente>> response = pacienteController.getAllPacientes();
+        ResponseEntity<List<PacienteResponseDTO>> response = pacienteController.getAllPacientes();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -122,7 +136,7 @@ class PacienteControllerTest {
         List<Paciente> pacientes = Arrays.asList(paciente);
         when(pacienteService.getActivePacientes()).thenReturn(pacientes);
 
-        ResponseEntity<List<Paciente>> response = pacienteController.getActivePacientes();
+        ResponseEntity<List<PacienteResponseDTO>> response = pacienteController.getActivePacientes();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -135,7 +149,7 @@ class PacienteControllerTest {
         List<Paciente> pacientes = Arrays.asList(paciente);
         when(pacienteService.getPacientesByNome("Maria")).thenReturn(pacientes);
 
-        ResponseEntity<List<Paciente>> response = pacienteController.searchPacientesByNome("Maria");
+        ResponseEntity<List<PacienteResponseDTO>> response = pacienteController.searchPacientesByNome("Maria");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).hasSize(1);
@@ -145,12 +159,13 @@ class PacienteControllerTest {
     @Test
     @DisplayName("Should update paciente and return 200")
     void shouldUpdatePacienteAndReturn200() {
+        when(pacienteService.getPacienteById(1L)).thenReturn(paciente);
         when(pacienteService.updatePaciente(eq(1L), any(Paciente.class))).thenReturn(paciente);
 
-        ResponseEntity<Paciente> response = pacienteController.updatePaciente(1L, paciente);
+        ResponseEntity<PacienteResponseDTO> response = pacienteController.updatePaciente(1L, pacienteRequest);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(paciente);
+        assertThat(response.getBody()).isEqualTo(pacienteResponse);
         verify(pacienteService).updatePaciente(eq(1L), any(Paciente.class));
     }
 
