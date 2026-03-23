@@ -1,7 +1,8 @@
 package br.com.fiap.app.agendamentoService.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
@@ -50,7 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException ex, HttpServletRequest request) {
-        log.error("Validation error: {}", ex.getMessage());
+        log.warn("Validation error: {}", ex.getMessage());
         
         List<ErrorResponse.ValidationError> validationErrors = ex.getBindingResult()
                 .getFieldErrors()
@@ -75,7 +76,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(
             AuthenticationException ex, HttpServletRequest request) {
-        log.error("Authentication error: {}", ex.getMessage());
+        log.warn("Authentication error: {}", ex.getMessage());
         
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
@@ -90,7 +91,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(
             AccessDeniedException ex, HttpServletRequest request) {
-        log.error("Access denied: {}", ex.getMessage());
+        log.warn("Access denied: {}", ex.getMessage());
         
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
