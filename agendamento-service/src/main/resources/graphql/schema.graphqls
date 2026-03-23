@@ -1,118 +1,188 @@
-type Query {
-  consultas: [ConsultaType]
-  consulta(id: ID!): ConsultaType
-  consultasByMedico(medicoId: ID!): [ConsultaType]
-  consultasByPaciente(pacienteId: ID!): [ConsultaType]
-  consultasFuturasByPaciente(pacienteId: ID!): [ConsultaType]
-  historicoCompletoPaciente(pacienteId: ID!): [ConsultaType]
-  consultasByStatus(status: StatusConsulta!): [ConsultaType]
-
-  medicos: [MedicoType]
-  medico(id: ID!): MedicoType
-  medicosByEspecialidade(especialidade: Especialidade!): [MedicoType]
-
-  pacientes: [PacienteType]
-  paciente(id: ID!): PacienteType
-}
-
-type Mutation {
-  agendarConsulta(input: ConsultaInput!): ConsultaType
-  atualizarStatusConsulta(id: ID!, status: StatusConsulta!): ConsultaType
-  cancelarConsulta(id: ID!, motivo: String!): Boolean
-}
-
-type ConsultaType {
-  id: ID
-  medico: MedicoSimpleType
-  paciente: PacienteSimpleType
-  enfermeiro: EnfermeiroSimpleType
-  dataHora: String
-  status: StatusConsulta
-  motivo: String
-  observacoes: String
-  diagnostico: String
-  prescricao: String
-  dataCriacao: String
-  dataAlteracao: String
-}
-
-type MedicoSimpleType {
-  id: ID
-  nome: String
-  crm: String
-  especialidade: Especialidade
-}
-
-type PacienteSimpleType {
-  id: ID
-  nome: String
-  cpf: String
-}
-
-type EnfermeiroSimpleType {
-  id: ID
-  nome: String
-  coren: String
-}
-
-type MedicoType {
-  id: ID
-  nome: String
-  email: String
-  telefone: String
-  crm: String
-  especialidade: Especialidade
-  descricao: String
-  ativo: Boolean
-}
-
-type PacienteType {
-  id: ID
-  nome: String
-  email: String
-  telefone: String
-  cpf: String
-  dataNascimento: String
-  endereco: String
-  numeroCartaoSus: String
-  convenioMedico: String
-  contatoEmergencia: String
-  observacoesMedicas: String
-  ativo: Boolean
-}
-
-input ConsultaInput {
-  medicoId: ID!
-  pacienteId: ID!
-  enfermeiroId: ID
-  dataHora: String!
-  motivo: String
-  observacoes: String
-}
-
+# === ENUMS ===
 enum StatusConsulta {
-  AGENDADA
-  CONFIRMADA
-  EM_ANDAMENTO
-  CONCLUIDA
-  CANCELADA
-  REAGENDADA
-  FALTA_PACIENTE
+    AGENDADA
+    CONFIRMADA
+    EM_ANDAMENTO
+    CONCLUIDA
+    CANCELADA
+    REAGENDADA
+    FALTA_PACIENTE
 }
 
 enum Especialidade {
-  CARDIOLOGIA
-  DERMATOLOGIA
-  ENDOCRINOLOGIA
-  GASTROENTEROLOGIA
-  GINECOLOGIA
-  NEUROLOGIA
-  OFTALMOLOGIA
-  ORTOPEDIA
-  OTORRINOLARINGOLOGIA
-  PEDIATRIA
-  PSIQUIATRIA
-  RADIOLOGIA
-  UROLOGIA
-  CLINICA_GERAL
+    CARDIOLOGIA
+    DERMATOLOGIA
+    ENDOCRINOLOGIA
+    GASTROENTEROLOGIA
+    GINECOLOGIA
+    NEUROLOGIA
+    OFTALMOLOGIA
+    ORTOPEDIA
+    OTORRINOLARINGOLOGIA
+    PEDIATRIA
+    PSIQUIATRIA
+    RADIOLOGIA
+    UROLOGIA
+    CLINICA_GERAL
+}
+
+enum Role {
+    ROLE_MEDICO
+    ROLE_ENFERMEIRO
+    ROLE_PACIENTE
+}
+
+# === TYPES ===
+type User {
+    id: ID!
+    username: String!
+    nome: String!
+    email: String!
+    telefone: String
+    role: Role!
+    active: Boolean!
+}
+
+type Medico {
+    id: ID!
+    user: User!
+    crm: String!
+    especialidade: Especialidade!
+    descricao: String
+    ativo: Boolean!
+}
+
+type Paciente {
+    id: ID!
+    user: User!
+    cpf: String!
+    dataNascimento: String!
+    endereco: String
+    numeroCartaoSus: String
+    convenioMedico: String
+    contatoEmergencia: String
+    observacoesMedicas: String
+    ativo: Boolean!
+}
+
+type Enfermeiro {
+    id: ID!
+    user: User!
+    coren: String!
+    setor: String
+    turno: String
+    especializacao: String
+    descricao: String
+    ativo: Boolean!
+}
+
+type Consulta {
+    id: ID!
+    medico: Medico!
+    paciente: Paciente!
+    enfermeiro: Enfermeiro
+    dataHora: String!
+    status: StatusConsulta!
+    motivo: String
+    observacoes: String
+    diagnostico: String
+    prescricao: String
+    dataCriacao: String!
+    dataAlteracao: String
+    criadoPor: String
+    alteradoPor: String
+}
+
+# DTO types for simplified responses (matching existing DTOs)
+type MedicoSimple {
+    id: ID!
+    nome: String!
+    crm: String!
+    especialidade: Especialidade!
+}
+
+type PacienteSimple {
+    id: ID!
+    nome: String!
+    cpf: String!
+}
+
+type EnfermeiroSimple {
+    id: ID!
+    nome: String!
+    coren: String!
+}
+
+type ConsultaResponse {
+    id: ID!
+    medico: MedicoSimple!
+    paciente: PacienteSimple!
+    enfermeiro: EnfermeiroSimple
+    dataHora: String!
+    status: StatusConsulta!
+    motivo: String
+    observacoes: String
+    diagnostico: String
+    prescricao: String
+    dataCriacao: String!
+    dataAlteracao: String
+}
+
+# === INPUT TYPES ===
+input ConsultaInput {
+    medicoId: ID!
+    pacienteId: ID!
+    enfermeiroId: ID
+    dataHora: String!
+    motivo: String
+    observacoes: String
+}
+
+input ConsultaUpdateInput {
+    dataHora: String
+    status: StatusConsulta
+    motivo: String
+    observacoes: String
+    diagnostico: String
+    prescricao: String
+}
+
+# === QUERIES ===
+type Query {
+    # Consultas
+    consultaById(id: ID!): Consulta
+    allConsultas: [ConsultaResponse!]!
+    consultasByMedico(medicoId: ID!): [ConsultaResponse!]!
+    consultasByPaciente(pacienteId: ID!): [ConsultaResponse!]!
+    consultasByStatus(status: StatusConsulta!): [ConsultaResponse!]!
+    consultasByPeriodo(inicio: String!, fim: String!): [ConsultaResponse!]!
+    consultasFuturasPorPaciente(pacienteId: ID!): [ConsultaResponse!]!
+    historicoCompletoPaciente(pacienteId: ID!): [ConsultaResponse!]!
+
+    # Medicos
+    medicoById(id: ID!): Medico
+    allMedicos: [Medico!]!
+    medicosByEspecialidade(especialidade: Especialidade!): [Medico!]!
+    medicosAtivos: [Medico!]!
+
+    # Pacientes
+    pacienteById(id: ID!): Paciente
+    allPacientes: [Paciente!]!
+    pacientesAtivos: [Paciente!]!
+
+    # Enfermeiros
+    enfermeiroById(id: ID!): Enfermeiro
+    allEnfermeiros: [Enfermeiro!]!
+    enfermeirosAtivos: [Enfermeiro!]!
+    enfermeirosBySetor(setor: String!): [Enfermeiro!]!
+    enfermeirosByTurno(turno: String!): [Enfermeiro!]!
+}
+
+# === MUTATIONS ===
+type Mutation {
+    createConsulta(input: ConsultaInput!): Consulta!
+    updateConsulta(id: ID!, input: ConsultaUpdateInput!): Consulta!
+    updateStatusConsulta(id: ID!, status: StatusConsulta!): Consulta!
+    cancelarConsulta(id: ID!, motivo: String!): Boolean
+    deleteConsulta(id: ID!): Boolean
 }

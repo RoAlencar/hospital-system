@@ -1,62 +1,38 @@
 package br.com.fiap.app.agendamentoService.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import br.com.fiap.app.agendamentoService.entity.Medico;
+import br.com.fiap.app.agendamentoService.enums.Especialidade;
+import br.com.fiap.app.agendamentoService.service.MedicoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
-import br.com.fiap.app.agendamentoService.dto.MedicoResponseDTO;
-import br.com.fiap.app.agendamentoService.dto.PacienteResponseDTO;
-import br.com.fiap.app.agendamentoService.enums.Especialidade;
-import br.com.fiap.app.agendamentoService.mapper.MedicoMapper;
-import br.com.fiap.app.agendamentoService.mapper.PacienteMapper;
-import br.com.fiap.app.agendamentoService.service.MedicoService;
-import br.com.fiap.app.agendamentoService.service.PacienteService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MedicoGraphQLController {
 
     private final MedicoService medicoService;
-    private final PacienteService pacienteService;
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public List<MedicoResponseDTO> medicos() {
-        return medicoService.getAllMedicos().stream()
-                .map(MedicoMapper::toDTO)
-                .collect(Collectors.toList());
+    public Medico medicoById(@Argument Long id) {
+        return medicoService.getMedicoById(id);
     }
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public MedicoResponseDTO medico(@Argument Long id) {
-        return MedicoMapper.toDTO(medicoService.getMedicoById(id));
+    public List<Medico> allMedicos() {
+        return medicoService.getAllMedicos();
     }
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public List<MedicoResponseDTO> medicosByEspecialidade(@Argument Especialidade especialidade) {
-        return medicoService.getMedicosByEspecialidade(especialidade).stream()
-                .map(MedicoMapper::toDTO)
-                .collect(Collectors.toList());
+    public List<Medico> medicosByEspecialidade(@Argument Especialidade especialidade) {
+        return medicoService.getMedicosByEspecialidade(especialidade);
     }
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public List<PacienteResponseDTO> pacientes() {
-        return pacienteService.getAllPacientes().stream()
-                .map(PacienteMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
-    public PacienteResponseDTO paciente(@Argument Long id) {
-        return PacienteMapper.toDTO(pacienteService.getPacienteById(id));
+    public List<Medico> medicosAtivos() {
+        return medicoService.getActiveMedicos();
     }
 }
