@@ -1,6 +1,22 @@
 spring:
   application:
     name: agendamento-service
+  
+  # Configurações do Banco de Dados
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hospital_system
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    
+  # Configurações JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
 
   # Configurações do RabbitMQ
   rabbitmq:
@@ -8,3 +24,41 @@ spring:
       port: 5672
       username: guest
       password: guest
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
+    http:
+      path: /graphql
+
+# Configurações do RabbitMQ (Custom Properties)
+rabbitmq:
+  exchange: hospital.exchange
+  queue: consulta.agendada.queue
+  routing-key: consulta.agendada
+  dlq-exchange: hospital.dlq.exchange
+  dlq-queue: consulta.agendada.dlq
+
+# Configurações do Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+  # Configurações do GraphQL
+  graphql:
+    graphiql:
+      enabled: true
+    schema:
+      printer:
+        enabled: true
+    http:
+      path: /graphql
+
+# Configurações do servidor
+server:
+  port: 8080

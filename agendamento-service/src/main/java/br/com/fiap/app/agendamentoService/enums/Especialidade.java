@@ -1,0 +1,18 @@
+package br.com.fiap.app.agendamentoService.enums;
+
+public enum Especialidade {
+    CARDIOLOGIA,
+    DERMATOLOGIA,
+    ENDOCRINOLOGIA,
+    GASTROENTEROLOGIA,
+    GINECOLOGIA,
+    NEUROLOGIA,
+    OFTALMOLOGIA,
+    ORTOPEDIA,
+    OTORRINOLARINGOLOGIA,
+    PEDIATRIA,
+    PSIQUIATRIA,
+    RADIOLOGIA,
+    UROLOGIA,
+    CLINICA_GERAL
+}
