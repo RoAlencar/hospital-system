@@ -966,7 +966,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"query ConsultasFuturasByPaciente($pacienteId: ID!) {\\n  consultasFuturasByPaciente(pacienteId: $pacienteId) {\\n    id\\n    dataHora\\n    motivo\\n  }\\n}\",\n  \"variables\": { \"pacienteId\": \"{{paciente_id}}\" }\n}"
+              "raw": "{\n  \"query\": \"query ConsultasFuturasPorPaciente($pacienteId: ID!) {\\n  consultasFuturasPorPaciente(pacienteId: $pacienteId) {\\n    id\\n    dataHora\\n    motivo\\n  }\\n}\",\n  \"variables\": { \"pacienteId\": \"{{paciente_id}}\" }\n}"
             },
             "auth": {
               "type": "basic",
@@ -1046,7 +1046,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation AgendarConsulta($input: ConsultaInput!) {\\n  agendarConsulta(input: $input) {\\n    id\\n    dataHora\\n    status\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-10-10T11:00:00\",\n      \"motivo\": \"Consulta via GraphQL mutation\"\n    }\n  }\n}"
+              "raw": "{\n  \"query\": \"mutation CreateConsulta($input: ConsultaInput!) {\\n  createConsulta(input: $input) {\\n    id\\n    dataHora\\n    status\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-10-10T11:00:00\",\n      \"motivo\": \"Consulta via GraphQL mutation\"\n    }\n  }\n}"
             },
             "auth": {
               "type": "basic",
@@ -1086,7 +1086,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation AtualizarStatusConsulta($id: ID!, $status: StatusConsulta!) {\\n  atualizarStatusConsulta(id: $id, status: $status) {\\n    id\\n    dataHora\\n    status\\n  }\\n}\",\n  \"variables\": {\n    \"id\": \"{{consulta_id}}\",\n    \"status\": \"CONFIRMADA\"\n  }\n}"
+              "raw": "{\n  \"query\": \"mutation UpdateStatusConsulta($id: ID!, $status: StatusConsulta!) {\\n  updateStatusConsulta(id: $id, status: $status) {\\n    id\\n    dataHora\\n    status\\n  }\\n}\",\n  \"variables\": {\n    \"id\": \"{{consulta_id}}\",\n    \"status\": \"CONFIRMADA\"\n  }\n}"
             },
             "auth": {
               "type": "basic",
@@ -1131,7 +1131,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation AgendarConsulta($input: ConsultaInput!) {\\n  agendarConsulta(input: $input) {\\n    id\\n    dataHora\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-11-05T15:00:00\",\n      \"motivo\": \"Agendamento por enfermeiro\"\n    }\n  }\n}"
+              "raw": "{\n  \"query\": \"mutation CreateConsulta($input: ConsultaInput!) {\\n  createConsulta(input: $input) {\\n    id\\n    dataHora\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-11-05T15:00:00\",\n      \"motivo\": \"Agendamento por enfermeiro\"\n    }\n  }\n}"
             },
             "auth": {
               "type": "basic",
@@ -1216,7 +1216,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation AgendarConsulta($input: ConsultaInput!) {\\n  agendarConsulta(input: $input) {\\n    id\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-12-01T10:00:00\",\n      \"motivo\": \"Tentativa proibida\"\n    }\n  }\n}"
+              "raw": "{\n  \"query\": \"mutation CreateConsulta($input: ConsultaInput!) {\\n  createConsulta(input: $input) {\\n    id\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"pacienteId\": \"{{paciente_id}}\",\n      \"medicoId\": \"{{medico_id}}\",\n      \"dataHora\": \"2026-12-01T10:00:00\",\n      \"motivo\": \"Tentativa proibida\"\n    }\n  }\n}"
             },
             "auth": {
               "type": "basic",
