@@ -23,7 +23,7 @@ public class ConsultaGraphQLController {
     private final ConsultaService consultaService;
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @consultaService.isConsultaOwnedByUser(#id, authentication.principal.id))")
     public Consulta consultaById(@Argument Long id) {
         return consultaService.getConsultaById(id);
     }
@@ -41,7 +41,7 @@ public class ConsultaGraphQLController {
     }
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @pacienteService.isOwnedByUser(#pacienteId, authentication.principal.id))")
     public List<ConsultaResponseDTO> consultasByPaciente(@Argument Long pacienteId) {
         return consultaService.getConsultasByPacienteDTO(pacienteId);
     }
@@ -62,13 +62,13 @@ public class ConsultaGraphQLController {
     }
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @pacienteService.isOwnedByUser(#pacienteId, authentication.principal.id))")
     public List<ConsultaResponseDTO> consultasFuturasPorPaciente(@Argument Long pacienteId) {
         return consultaService.getConsultasFuturasPorPacienteDTO(pacienteId);
     }
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @pacienteService.isOwnedByUser(#pacienteId, authentication.principal.id))")
     public List<ConsultaResponseDTO> historicoCompletoPaciente(@Argument Long pacienteId) {
         return consultaService.getHistoricoCompletoPacienteDTO(pacienteId);
     }
