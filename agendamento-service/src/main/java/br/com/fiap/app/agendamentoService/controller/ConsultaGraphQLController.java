@@ -1,18 +1,20 @@
 package br.com.fiap.app.agendamentoService.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+
 import br.com.fiap.app.agendamentoService.dto.ConsultaResponseDTO;
 import br.com.fiap.app.agendamentoService.entity.Consulta;
 import br.com.fiap.app.agendamentoService.enums.StatusConsulta;
 import br.com.fiap.app.agendamentoService.service.ConsultaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.stereotype.Controller;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,31 +23,37 @@ public class ConsultaGraphQLController {
     private final ConsultaService consultaService;
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
     public Consulta consultaById(@Argument Long id) {
         return consultaService.getConsultaById(id);
     }
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public List<ConsultaResponseDTO> allConsultas() {
         return consultaService.getAllConsultasDTO();
     }
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public List<ConsultaResponseDTO> consultasByMedico(@Argument Long medicoId) {
         return consultaService.getConsultasByMedicoDTO(medicoId);
     }
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
     public List<ConsultaResponseDTO> consultasByPaciente(@Argument Long pacienteId) {
         return consultaService.getConsultasByPacienteDTO(pacienteId);
     }
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public List<ConsultaResponseDTO> consultasByStatus(@Argument StatusConsulta status) {
         return consultaService.getConsultasByStatusDTO(status);
     }
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public List<ConsultaResponseDTO> consultasByPeriodo(@Argument String inicio, @Argument String fim) {
         return consultaService.getConsultasByPeriodoDTO(
                 LocalDateTime.parse(inicio),
@@ -54,16 +62,19 @@ public class ConsultaGraphQLController {
     }
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
     public List<ConsultaResponseDTO> consultasFuturasPorPaciente(@Argument Long pacienteId) {
         return consultaService.getConsultasFuturasPorPacienteDTO(pacienteId);
     }
 
     @QueryMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
     public List<ConsultaResponseDTO> historicoCompletoPaciente(@Argument Long pacienteId) {
         return consultaService.getHistoricoCompletoPacienteDTO(pacienteId);
     }
 
     @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public Consulta createConsulta(@Argument Map<String, Object> input) {
         Consulta request = new Consulta();
         request.setMedicoId(Long.valueOf(input.get("medicoId").toString()));
@@ -78,6 +89,7 @@ public class ConsultaGraphQLController {
     }
 
     @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public Consulta updateConsulta(@Argument Long id, @Argument Map<String, Object> input) {
         Consulta request = new Consulta();
         if (input.get("dataHora") != null) {
@@ -94,17 +106,20 @@ public class ConsultaGraphQLController {
     }
 
     @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public Consulta updateStatusConsulta(@Argument Long id, @Argument StatusConsulta status) {
         return consultaService.updateStatusConsulta(id, status);
     }
 
     @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public Boolean cancelarConsulta(@Argument Long id, @Argument String motivo) {
         consultaService.cancelarConsulta(id, motivo);
         return true;
     }
 
     @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO')")
     public Boolean deleteConsulta(@Argument Long id) {
         consultaService.deleteConsulta(id);
         return true;

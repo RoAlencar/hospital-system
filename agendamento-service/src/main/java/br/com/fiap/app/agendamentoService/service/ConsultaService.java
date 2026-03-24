@@ -264,4 +264,11 @@ public class ConsultaService {
                 .build();
         rabbitTemplate.convertAndSend(exchange, routingKey, event);
     }
+
+    @Transactional(readOnly = true)
+    public boolean isConsultaOwnedByUser(Long consultaId, Long userId) {
+        return consultaRepository.findById(consultaId)
+                .map(c -> c.getPaciente().getUser().getId().equals(userId))
+                .orElse(false);
+    }
 }

@@ -41,7 +41,7 @@ public class ConsultaController {
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or hasAuthority('ROLE_PACIENTE')")
+    @PreAuthorize("hasAuthority('ROLE_MEDICO') or hasAuthority('ROLE_ENFERMEIRO') or (hasAuthority('ROLE_PACIENTE') and @consultaService.isConsultaOwnedByUser(#id, authentication.principal.id))")
     public ResponseEntity<ConsultaResponseDTO> getConsultaById(@PathVariable Long id) {
         return ResponseEntity.ok(ConsultaMapper.toDTO(consultaService.getConsultaById(id)));
     }
